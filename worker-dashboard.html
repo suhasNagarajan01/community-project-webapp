@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="green" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Worker Dashboard - Nearby Daily Wage Jobs (Demo)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+  <!-- Top App Navigation -->
+  <header class="app-navbar">
+    <div class="container-fluid px-3 px-md-4">
+      <div class="d-flex align-items-center justify-content-between">
+        
+        <!-- Hamburger & Brand -->
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-secondary border-0 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#appDrawer">
+            <i class="bi bi-list fs-4"></i>
+          </button>
+          
+          <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
+            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-gradient); color: #fff; width: 38px; height: 38px;">
+              <i class="bi bi-tools fs-5"></i>
+            </div>
+            <div>
+              <span class="fw-bold fs-5 d-block lh-1" style="color: var(--text-main);">RojgarSetu</span>
+              <small class="text-muted" style="font-size: 0.70rem; font-weight: 600; letter-spacing: 0.5px;">DAILY WAGE PLATFORM</small>
+            </div>
+          </a>
+        </div>
+
+        <div class="d-none d-md-flex align-items-center">
+          <span class="badge-chip badge-chip-brand">
+            <i class="bi bi-person-badge"></i> Worker Portal (Logged In: Ramesh Kumar)
+          </span>
+        </div>
+
+        <!-- Right: Palette Toggle, Dark Mode & Profile Menu -->
+        <div class="d-flex align-items-center gap-2">
+          <!-- Palette Toggle -->
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 border-0" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-palette-fill" style="color: var(--brand-primary);"></i>
+              <span class="d-none d-sm-inline small fw-semibold">Theme</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" style="background-color: var(--bg-surface);">
+              <li><h6 class="dropdown-header text-uppercase small text-muted">Palette Selection</h6></li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('green')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #059669;"></span>
+                  <span>Emerald Green & White</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('brown')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #92400e;"></span>
+                  <span>Warm Earth & Soft Beige</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dark/Light Toggle -->
+          <button class="btn btn-sm btn-outline-secondary border-0 p-2" type="button" onclick="DemoTheme.toggleMode()" title="Toggle Dark/Light Mode">
+            <i class="bi bi-moon-stars-fill" style="color: var(--text-muted);"></i>
+          </button>
+
+          <!-- Top-Right Profile Pill (PRD Requirement) -->
+          <a href="profile.html" class="d-flex align-items-center gap-2 text-decoration-none">
+            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 38px; height: 38px; background: var(--brand-primary-light); color: var(--brand-primary); border: 2px solid var(--brand-primary);">
+              R
+            </div>
+            <div class="text-start d-none d-lg-block">
+              <span class="fw-semibold small d-block lh-1" style="color: var(--text-main);">Ramesh Kumar</span>
+              <small class="text-warning" style="font-size: 0.70rem;"><i class="bi bi-star-fill"></i> 4.94 (32 reviews)</small>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hamburger Drawer Offcanvas (Top-Left navigation - PRD Requirement) -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="appDrawer" style="background-color: var(--bg-surface); color: var(--text-main);">
+    <div class="offcanvas-header border-bottom border-subtle">
+      <div class="d-flex align-items-center gap-2">
+        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-gradient); color: #fff; width: 34px; height: 34px;">
+          <i class="bi bi-tools fs-6"></i>
+        </div>
+        <h5 class="offcanvas-title fw-bold">RojgarSetu</h5>
+      </div>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column justify-content-between p-3">
+      <div>
+        <div class="p-3 mb-3 rounded-3" style="background: var(--brand-primary-light);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 46px; height: 46px; background: var(--brand-primary); color: #fff;">
+              R
+            </div>
+            <div>
+              <div class="fw-bold" style="color: var(--text-main);">Ramesh Kumar</div>
+              <small class="text-muted d-block">Electrician • 5 yrs exp</small>
+              <small class="text-muted"><i class="bi bi-geo-alt"></i> Indiranagar, Bengaluru</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-group list-group-flush mb-4">
+          <a href="worker-dashboard.html" class="list-group-item list-group-item-action bg-transparent py-3 border-0 d-flex align-items-center gap-3 active" style="color: var(--brand-primary); font-weight: 700;">
+            <i class="bi bi-house-door fs-5"></i>
+            <span>Home Dashboard</span>
+          </a>
+          <a href="profile.html" class="list-group-item list-group-item-action bg-transparent py-3 border-0 d-flex align-items-center gap-3">
+            <i class="bi bi-person-circle fs-5 text-muted"></i>
+            <span class="fw-semibold">My Profile & Ratings</span>
+          </a>
+          <a href="index.html" class="list-group-item list-group-item-action bg-transparent py-3 border-0 d-flex align-items-center gap-3">
+            <i class="bi bi-info-circle fs-5 text-muted"></i>
+            <span class="fw-semibold">About Us</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="pt-3 border-top border-subtle">
+        <a href="login.html" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2">
+          <i class="bi bi-box-arrow-right"></i> Logout (Demo)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <div class="container py-3 py-md-4">
+
+      <!-- Worker Welcome Strip -->
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+          <h2 class="fw-bold mb-1" style="color: var(--text-main);">
+            Find Daily Work Today, Ramesh
+          </h2>
+          <p class="text-muted small mb-0">
+            <i class="bi bi-geo-alt-fill text-danger"></i> Showing verified jobs around <strong>Indiranagar & Koramangala</strong>
+          </p>
+        </div>
+
+        <!-- Quick Worker Status Pill -->
+        <div class="btn btn-sm glass-panel p-2 px-3 d-flex align-items-center gap-3">
+          <div class="rounded-circle p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-primary-light); color: var(--brand-primary);">
+            <i class="bi bi-check-circle-fill fs-5"></i>
+          </div>
+          <div class="text-start">
+            <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">DAILY STATUS</small>
+            <span class="fw-bold fs-6" style="color: var(--brand-primary);">Available for Work</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-box-wrap mb-3">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="Search by skill, job title, locality (e.g. Electrician, Painter, Indiranagar)..." value="">
+      </div>
+
+      <!-- Category Filter Pills Strip -->
+      <div class="category-filter-strip mb-3">
+        <button class="category-chip-btn active"><i class="bi bi-grid-fill"></i> All Jobs</button>
+        <button class="category-chip-btn">Electrical Work</button>
+        <button class="category-chip-btn">Plumbing</button>
+        <button class="category-chip-btn">Painting</button>
+        <button class="category-chip-btn">Construction</button>
+        <button class="category-chip-btn">Housekeeping</button>
+        <button class="category-chip-btn">General Helper</button>
+      </div>
+
+      <!-- Filter Controls Bar -->
+      <div class="d-flex justify-content-between align-items-center mb-3 px-1 small text-muted fw-semibold">
+        <span>Available Openings (6 Jobs Nearby)</span>
+        <div class="d-flex gap-2">
+          <span class="badge-chip badge-chip-brand">Sort: Nearest First</span>
+        </div>
+      </div>
+
+      <!-- Static Job Cards Grid -->
+      <div class="row g-3">
+        
+        <!-- Job 1 -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <span class="badge-chip badge-chip-brand">
+                  <i class="bi bi-tag-fill me-1"></i>Electrical Work
+                </span>
+                <span class="wage-pill">₹900<small class="fs-6 fw-normal">/day</small></span>
+              </div>
+              <h5 class="fw-bold mb-1" style="color: var(--text-main);">Urgent 2 Electricians for 3BHK Conduit Wiring</h5>
+              <p class="text-muted small mb-3">Complete rewiring of 3BHK flat in Indiranagar. Need 2 qualified electricians with tools. Wall chasing already completed. High daily wage.</p>
+              
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-wrench me-1"></i>Conduit wiring, DB box</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-clock me-1"></i>2 Days (9 AM - 6 PM)</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-calendar3 me-1"></i>Starts Tomorrow</span>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 text-muted small mb-2">
+                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>Indiranagar 12th Main</div>
+                <div><i class="bi bi-pin-map text-primary me-1"></i>~2.1 km away</div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: var(--border-subtle); color: var(--text-main); font-size: 0.75rem;">
+                  P
+                </div>
+                <div>
+                  <div class="small fw-semibold lh-1" style="color: var(--text-main);">Prestige Renovations</div>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 4.88 (19 reviews)</div>
+                </div>
+              </div>
+
+              <a href="job-detail.html" class="btn btn-sm btn-brand">Apply Now <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <span class="badge-chip badge-chip-brand">
+                  <i class="bi bi-tag-fill me-1"></i>Plumbing
+                </span>
+                <span class="wage-pill">₹850<small class="fs-6 fw-normal">/day</small></span>
+              </div>
+              <h5 class="fw-bold mb-1" style="color: var(--text-main);">Plumber for Leaking Overhead Tank & Bathroom Valves</h5>
+              <p class="text-muted small mb-3">Main PVC line from overhead tank has split. Need one experienced plumber to replace 1.5 inch pipe and 2 ball valves in our residence.</p>
+              
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-wrench me-1"></i>Overhead tank pipe, CPVC joints</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-clock me-1"></i>1 Day (10 AM - 3 PM)</span>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 text-muted small mb-2">
+                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>Jayanagar 4th Block</div>
+                <div><i class="bi bi-pin-map text-primary me-1"></i>~1.8 km away</div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: var(--border-subtle); color: var(--text-main); font-size: 0.75rem;">
+                  A
+                </div>
+                <div>
+                  <div class="small fw-semibold lh-1" style="color: var(--text-main);">Anand Murthy (Household)</div>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 5.0 (8 reviews)</div>
+                </div>
+              </div>
+
+              <a href="job-detail.html" class="btn btn-sm btn-brand">Apply Now <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 3 -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <span class="badge-chip badge-chip-brand">
+                  <i class="bi bi-tag-fill me-1"></i>Painting
+                </span>
+                <span class="wage-pill">₹850<small class="fs-6 fw-normal">/day</small></span>
+              </div>
+              <h5 class="fw-bold mb-1" style="color: var(--text-main);">Need 4 Painters for Apartment Interior Putty</h5>
+              <p class="text-muted small mb-3">Fresh repainting project for residential duplex. Scaffolding on site. Looking for 4 painters with neat cutting and roller experience.</p>
+              
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-wrench me-1"></i>Putty sanding, roller finish</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-clock me-1"></i>4 Days (9 AM - 5:30 PM)</span>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 text-muted small mb-2">
+                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>Defence Colony, Indiranagar</div>
+                <div><i class="bi bi-pin-map text-primary me-1"></i>~2.8 km away</div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: var(--border-subtle); color: var(--text-main); font-size: 0.75rem;">
+                  P
+                </div>
+                <div>
+                  <div class="small fw-semibold lh-1" style="color: var(--text-main);">Prestige Renovations</div>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 4.88 (19 reviews)</div>
+                </div>
+              </div>
+
+              <a href="job-detail.html" class="btn btn-sm btn-brand">Apply Now <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 4 -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <span class="badge-chip badge-chip-brand">
+                  <i class="bi bi-tag-fill me-1"></i>Construction
+                </span>
+                <span class="wage-pill">₹950<small class="fs-6 fw-normal">/day</small></span>
+              </div>
+              <h5 class="fw-bold mb-1" style="color: var(--text-main);">Need 3 Skilled Masons for Plastering</h5>
+              <p class="text-muted small mb-3">Commercial brickwork and cement plastering on 2nd floor. Lunch provided on site. Daily payout after 5:30 PM inspection.</p>
+              
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-wrench me-1"></i>Masonry, plastering</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill"><i class="bi bi-clock me-1"></i>3 Days (8:30 AM - 5:30 PM)</span>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 text-muted small mb-2">
+                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>Koramangala 80ft Road</div>
+                <div><i class="bi bi-pin-map text-primary me-1"></i>~1.4 km away</div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: var(--border-subtle); color: var(--text-main); font-size: 0.75rem;">
+                  B
+                </div>
+                <div>
+                  <div class="small fw-semibold lh-1" style="color: var(--text-main);">BuildWell Infra</div>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 4.92 (26 reviews)</div>
+                </div>
+              </div>
+
+              <a href="job-detail.html" class="btn btn-sm btn-brand">Apply Now <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom Navigation Bar (PRD Requirement: Mobile-first UX) -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <a href="worker-dashboard.html" class="nav-item-link active">
+      <i class="bi bi-house-door"></i>
+      <span>Home</span>
+    </a>
+    <a href="profile.html" class="nav-item-link">
+      <i class="bi bi-person"></i>
+      <span>Profile</span>
+    </a>
+    <a href="login.html" class="nav-item-link">
+      <i class="bi bi-box-arrow-right"></i>
+      <span>Logout</span>
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

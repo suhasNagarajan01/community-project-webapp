@@ -1,0 +1,61 @@
+/**
+ * Static Demo Theme Controller
+ * Handles 1-click switching between Emerald Green & White and Warm Earth & Beige,
+ * plus Dark/Light mode, with persistence in localStorage and mode icon synchronization.
+ */
+(function () {
+  const THEME_KEY = 'static_demo_theme';
+  const MODE_KEY = 'static_demo_mode';
+
+  function updateModeIcon(mode) {
+    const iconEls = document.querySelectorAll('.mode-toggle-icon');
+    iconEls.forEach(el => {
+      if (mode === 'dark') {
+        el.className = 'bi bi-sun-fill mode-toggle-icon text-warning';
+      } else {
+        el.className = 'bi bi-moon-stars-fill mode-toggle-icon text-muted';
+      }
+    });
+  }
+
+  function apply(theme, mode) {
+    const html = document.documentElement;
+    const meta = document.querySelector('meta[name="color-scheme"]');
+
+    html.setAttribute('data-theme', theme);
+    html.setAttribute('data-mode', mode);
+
+    if (meta) {
+      meta.setAttribute('content', mode === 'dark' ? 'dark' : (mode === 'light' ? 'light' : 'light dark'));
+    }
+
+    localStorage.setItem(THEME_KEY, theme);
+    localStorage.setItem(MODE_KEY, mode);
+    updateModeIcon(mode);
+  }
+
+  function init() {
+    let theme = localStorage.getItem(THEME_KEY) || 'green';
+    let mode = localStorage.getItem(MODE_KEY) || 'light';
+    apply(theme, mode);
+  }
+
+  window.DemoTheme = {
+    setTheme: function (theme) {
+      const mode = localStorage.getItem(MODE_KEY) || 'light';
+      apply(theme, mode);
+    },
+    toggleMode: function () {
+      const theme = localStorage.getItem(THEME_KEY) || 'green';
+      const currentMode = localStorage.getItem(MODE_KEY) || 'light';
+      const newMode = currentMode === 'dark' ? 'light' : 'dark';
+      apply(theme, newMode);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

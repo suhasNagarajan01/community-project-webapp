@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="green" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>RojgarSetu - Daily Wage Worker & Contractor Platform</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    .role-badge-worker {
+      background: var(--brand-primary-light);
+      color: var(--brand-primary);
+      border: 1px solid var(--border-subtle);
+    }
+    .role-badge-contractor {
+      background: #e0f2fe;
+      color: #0284c7;
+      border: 1px solid #bae6fd;
+    }
+    [data-mode="dark"] .role-badge-contractor {
+      background: rgba(2, 132, 199, 0.2);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+    .job-card-new {
+      animation: highlightJob 1.5s ease-out;
+    }
+    @keyframes highlightJob {
+      0% { transform: scale(1.02); box-shadow: 0 0 0 3px var(--brand-primary); }
+      100% { transform: scale(1); box-shadow: var(--shadow-sm); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Navigation -->
+  <header class="app-navbar">
+    <div class="container-fluid px-3 px-md-4">
+      <div class="d-flex align-items-center justify-content-between">
+        
+        <!-- Left: Hamburger Button & Brand -->
+        <div class="d-flex align-items-center gap-2">
+          <!-- Hamburger Menu Trigger -->
+          <button class="btn btn-sm btn-outline-secondary border-0 p-2 me-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#appDrawer" aria-label="Open Navigation Menu">
+            <i class="bi bi-list fs-4" style="color: var(--text-main);"></i>
+          </button>
+
+          <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
+            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-gradient); color: #fff; width: 38px; height: 38px;">
+              <i class="bi bi-tools fs-5"></i>
+            </div>
+            <div>
+              <span class="fw-bold fs-5 d-block lh-1" style="color: var(--text-main);">RojgarSetu</span>
+              <small class="text-muted" style="font-size: 0.70rem; font-weight: 600; letter-spacing: 0.5px;">DAILY WAGE PLATFORM</small>
+            </div>
+          </a>
+        </div>
+
+        <!-- Center: Active Role Indicator -->
+        <div class="d-none d-lg-flex align-items-center gap-2">
+          <div id="navRolePill" class="badge-chip role-badge-worker">
+            <i class="bi bi-person-badge"></i> <span id="navRoleText">Logged In: Worker (Ramesh Kumar)</span>
+          </div>
+        </div>
+
+        <!-- Right: Separate Logins (Worker vs Contractor), Palette, Dark/Light Mode -->
+        <div class="d-flex align-items-center gap-2">
+          
+          <!-- Contractor "Post a Job" quick CTA (Visible when Contractor is logged in) -->
+          <button id="navPostJobBtn" class="btn btn-sm btn-brand d-none align-items-center gap-1" type="button" data-bs-toggle="modal" data-bs-target="#postJobModal">
+            <i class="bi bi-plus-circle-fill"></i> Post a Job
+          </button>
+
+          <!-- Separate Login 1: Worker Login -->
+          <button class="btn btn-sm btn-brand-outline d-flex align-items-center gap-1" type="button" data-bs-toggle="modal" data-bs-target="#workerLoginModal" title="Worker / Daily Wage User Login">
+            <i class="bi bi-person-badge"></i>
+            <span class="d-none d-sm-inline">Worker Login</span>
+          </button>
+
+          <!-- Separate Login 2: Contractor Login -->
+          <button class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1" type="button" data-bs-toggle="modal" data-bs-target="#contractorLoginModal" title="Contractor / Employer Login">
+            <i class="bi bi-building"></i>
+            <span class="d-none d-sm-inline">Contractor Login</span>
+          </button>
+
+          <!-- Palette Toggle -->
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Palette Selection">
+              <i class="bi bi-palette-fill" style="color: var(--brand-primary);"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" style="background-color: var(--bg-surface);">
+              <li><h6 class="dropdown-header text-uppercase small text-muted">Palette Selection</h6></li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('green')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #059669;"></span>
+                  <span>Emerald Green & White</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('brown')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #92400e;"></span>
+                  <span>Warm Earth & Soft Beige</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dark/Light Toggle -->
+          <button class="btn btn-sm btn-outline-secondary border-0 p-2" type="button" onclick="DemoTheme.toggleMode()" title="Toggle Dark/Light Mode" aria-label="Toggle Dark/Light Mode">
+            <i class="bi bi-moon-stars-fill mode-toggle-icon" style="color: var(--text-muted); font-size: 1.1rem;"></i>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hamburger Drawer Offcanvas (Self-contained, shows profile & reviews, does not lead anywhere else) -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="appDrawer" style="background-color: var(--bg-surface); color: var(--text-main); width: 100%; max-width: 440px;">
+    <div class="offcanvas-header border-bottom border-subtle">
+      <div class="d-flex align-items-center gap-2">
+        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-gradient); color: #fff; width: 34px; height: 34px;">
+          <i class="bi bi-tools fs-6"></i>
+        </div>
+        <div>
+          <h5 class="offcanvas-title fw-bold mb-0 lh-1">RojgarSetu</h5>
+          <small class="text-muted" style="font-size: 0.70rem;">Platform Menu</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body d-flex flex-column justify-content-between p-3" style="overflow-y: auto;">
+      <div>
+        
+        <!-- Separate Logins Quick Panel in Drawer -->
+        <div class="p-3 mb-3 rounded-3" style="background: var(--bg-canvas); border: 1px solid var(--border-subtle);">
+          <small class="text-muted fw-bold d-block mb-2" style="font-size: 0.70rem; letter-spacing: 0.5px;">SEPARATE PORTAL LOGINS</small>
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-sm btn-brand-outline d-flex align-items-center justify-content-between" data-bs-toggle="modal" data-bs-target="#workerLoginModal" data-bs-dismiss="offcanvas">
+              <span><i class="bi bi-person-badge me-2"></i> Worker Login</span>
+              <i class="bi bi-arrow-right small"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-between" data-bs-toggle="modal" data-bs-target="#contractorLoginModal" data-bs-dismiss="offcanvas">
+              <span><i class="bi bi-building me-2"></i> Contractor Login</span>
+              <i class="bi bi-arrow-right small"></i>
+            </button>
+          </div>
+          <div class="mt-2 text-center">
+            <small class="text-muted">Active: <strong id="drawerActiveRoleLabel" style="color: var(--brand-primary);">Daily Wage Worker</strong></small>
+          </div>
+        </div>
+
+        <!-- In-Drawer Navigation Menu (Does not lead anywhere else) -->
+        <div class="list-group list-group-flush mb-3 pb-2 border-bottom border-subtle">
+          <a href="javascript:void(0)" class="list-group-item list-group-item-action bg-transparent py-2 px-2 border-0 d-flex align-items-center gap-3 active fw-bold" style="color: var(--brand-primary);" data-bs-dismiss="offcanvas">
+            <i class="bi bi-house-door-fill fs-5"></i>
+            <span>Home</span>
+          </a>
+          <a href="#jobs-section" class="list-group-item list-group-item-action bg-transparent py-2 px-2 border-0 d-flex align-items-center gap-3" data-bs-dismiss="offcanvas">
+            <i class="bi bi-briefcase-fill fs-5 text-muted"></i>
+            <span class="fw-semibold" style="color: var(--text-main);">Check Job Openings</span>
+          </a>
+          <a id="drawerPostJobLink" href="javascript:void(0)" class="list-group-item list-group-item-action bg-transparent py-2 px-2 border-0 d-flex align-items-center gap-3 d-none" onclick="triggerPostJobFromDrawer()">
+            <i class="bi bi-plus-circle-fill fs-5 text-success"></i>
+            <span class="fw-semibold" style="color: var(--text-main);">Post a New Job</span>
+          </a>
+          <a href="#drawer-profile-anchor" class="list-group-item list-group-item-action bg-transparent py-2 px-2 border-0 d-flex align-items-center gap-3">
+            <i class="bi bi-person-circle fs-5 text-muted"></i>
+            <span class="fw-semibold" style="color: var(--text-main);">Profile & Reviews</span>
+          </a>
+        </div>
+
+        <!-- Profile Container: Worker Profile (shown for Worker role) -->
+        <div id="drawerWorkerProfileSection" class="mb-4">
+          <div id="drawer-profile-anchor" class="p-3 rounded-4 mb-3" style="background: var(--brand-primary-light); border: 1px solid var(--border-subtle);">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 shadow-sm" style="width: 58px; height: 58px; background: var(--brand-primary); color: #fff; border: 2px solid #fff;">
+                R
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2">
+                  <h5 class="fw-bold mb-0" style="color: var(--text-main);">Ramesh Kumar</h5>
+                  <i class="bi bi-patch-check-fill text-primary" title="Verified Worker"></i>
+                </div>
+                <small class="text-muted d-block"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Indiranagar, Bengaluru</small>
+                <div class="star-rating small mt-1">
+                  <i class="bi bi-star-fill"></i> 4.94 <span class="text-muted fw-normal">(32 verified reviews)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+              <span class="badge-chip badge-chip-brand">Daily Wage Worker</span>
+              <span class="badge-chip badge-chip-success"><i class="bi bi-circle-fill text-success" style="font-size: 0.5rem;"></i> Available Today</span>
+            </div>
+          </div>
+
+          <!-- Profile Details -->
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <div class="p-2 rounded-3 text-center" style="background: var(--bg-canvas); border: 1px solid var(--border-subtle);">
+                <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">DAILY WAGE</small>
+                <span class="fw-bold fs-6" style="color: var(--brand-primary);">₹850/day</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-2 rounded-3 text-center" style="background: var(--bg-canvas); border: 1px solid var(--border-subtle);">
+                <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">EXPERIENCE</small>
+                <span class="fw-bold fs-6" style="color: var(--text-main);">5.5 Years</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Specialized Skills -->
+          <div class="mb-3">
+            <small class="text-muted fw-semibold d-block mb-1">SPECIALIZED SKILLS</small>
+            <div class="d-flex flex-wrap gap-1">
+              <span class="badge bg-secondary-subtle text-secondary py-1 px-2 rounded-pill small"><i class="bi bi-wrench me-1"></i>Electrician</span>
+              <span class="badge bg-secondary-subtle text-secondary py-1 px-2 rounded-pill small"><i class="bi bi-lightning-charge me-1"></i>Inverter Wiring</span>
+              <span class="badge bg-secondary-subtle text-secondary py-1 px-2 rounded-pill small"><i class="bi bi-cpu me-1"></i>DB Box Assembly</span>
+            </div>
+          </div>
+
+          <!-- Reliability Metrics -->
+          <div class="row g-2 text-center p-2 rounded-3 mb-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+            <div class="col-4 border-end border-subtle">
+              <small class="text-muted d-block lh-1" style="font-size: 0.65rem;">RELIABILITY</small>
+              <strong class="text-success fs-6">99%</strong>
+            </div>
+            <div class="col-4 border-end border-subtle">
+              <small class="text-muted d-block lh-1" style="font-size: 0.65rem;">ATTENDANCE</small>
+              <strong class="text-primary fs-6">98%</strong>
+            </div>
+            <div class="col-4">
+              <small class="text-muted d-block lh-1" style="font-size: 0.65rem;">COMPLETED</small>
+              <strong class="fs-6" style="color: var(--text-main);">48 jobs</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Container: Contractor Profile (shown for Contractor role) -->
+        <div id="drawerContractorProfileSection" class="mb-4 d-none">
+          <div class="p-3 rounded-4 mb-3" style="background: #e0f2fe; border: 1px solid #bae6fd;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 shadow-sm" style="width: 58px; height: 58px; background: #0284c7; color: #fff; border: 2px solid #fff;">
+                B
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2">
+                  <h5 class="fw-bold mb-0" style="color: #0c4a6e;">Rajesh Sharma</h5>
+                  <i class="bi bi-patch-check-fill text-primary" title="Verified Contractor"></i>
+                </div>
+                <small class="text-muted d-block">BuildWell Infrastructure • Bengaluru</small>
+                <div class="star-rating small mt-1">
+                  <i class="bi bi-star-fill"></i> 4.90 <span class="text-muted fw-normal">(45 jobs completed)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+              <span class="badge-chip role-badge-contractor">Licensed Contractor</span>
+              <span class="badge-chip badge-chip-success"><i class="bi bi-check-circle-fill" style="font-size: 0.6rem;"></i> Actively Hiring</span>
+            </div>
+          </div>
+
+          <!-- Contractor Metrics -->
+          <div class="row g-2 text-center p-2 rounded-3 mb-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+            <div class="col-4 border-end border-subtle">
+              <small class="text-muted d-block lh-1" style="font-size: 0.65rem;">ACTIVE POSTS</small>
+              <strong class="text-primary fs-6" id="contractorActivePostsCount">4 Posts</strong>
+            </div>
+            <div class="col-4 border-end border-subtle">
+              <small class="text-muted d-block lh-1" style="font-size: 0.65rem;">HIRED WORKERS</small>
+              <strong class="text-success fs-6">84</strong>
+            </div>
+            <div class="col-4">
+              <small class="text-muted d-block lh-1" style="font-size: 0.65rem;">PAYOUT RATE</small>
+              <strong class="fs-6" style="color: var(--text-main);">100%</strong>
+            </div>
+          </div>
+
+          <!-- Quick Post Job Button inside Contractor Drawer -->
+          <button type="button" class="btn btn-brand w-100 mb-3 py-2" onclick="triggerPostJobFromDrawer()">
+            <i class="bi bi-plus-circle-fill me-1"></i> Post a New Daily Job
+          </button>
+        </div>
+
+        <!-- Employee / Employer Reviews Section (Kept in profile as requested) -->
+        <div id="drawer-employee-reviews" class="mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold mb-0" style="color: var(--text-main);">
+              <i class="bi bi-chat-quote-fill me-1" style="color: var(--brand-primary);"></i>
+              Employer & Employee Reviews
+            </h6>
+            <span class="badge-chip badge-chip-brand" style="font-size: 0.70rem;">Verified Reviews</span>
+          </div>
+
+          <!-- Review 1 -->
+          <div class="p-3 mb-2 rounded-3 border border-subtle" style="background: var(--bg-surface);">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <div>
+                <strong class="small d-block" style="color: var(--text-main);">Prestige Home Renovations</strong>
+                <small class="text-muted" style="font-size: 0.70rem;">Job: 2BHK Main MCB Box Wiring & Inverter</small>
+              </div>
+              <span class="star-rating small"><i class="bi bi-star-fill"></i> 5.0</span>
+            </div>
+            <p class="text-muted small mb-0" style="font-size: 0.80rem;">
+              "Ramesh did an outstanding job with concealed conduit wiring. Very punctual, arrived at 8:45 AM, and left the work area clean!"
+            </p>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="p-3 mb-2 rounded-3 border border-subtle" style="background: var(--bg-surface);">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <div>
+                <strong class="small d-block" style="color: var(--text-main);">BuildWell Infrastructure</strong>
+                <small class="text-muted" style="font-size: 0.70rem;">Job: Commercial Lighting Circuit Installation</small>
+              </div>
+              <span class="star-rating small"><i class="bi bi-star-fill"></i> 4.9</span>
+            </div>
+            <p class="text-muted small mb-0" style="font-size: 0.80rem;">
+              "Very skilled technician. Solved a tough earthing ground issue that 2 other electricians could not fix."
+            </p>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="p-3 mb-2 rounded-3 border border-subtle" style="background: var(--bg-surface);">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <div>
+                <strong class="small d-block" style="color: var(--text-main);">Anand Murthy (Home Owner)</strong>
+                <small class="text-muted" style="font-size: 0.70rem;">Job: Power Socket Earthing & Fixtures</small>
+              </div>
+              <span class="star-rating small"><i class="bi bi-star-fill"></i> 5.0</span>
+            </div>
+            <p class="text-muted small mb-0" style="font-size: 0.80rem;">
+              "Polite, knowledgeable, and honest pricing. Finished work ahead of time. Highly recommended for any household electrical jobs."
+            </p>
+          </div>
+        </div>
+
+        <!-- Direct Contact action -->
+        <a href="tel:9876543210" class="btn btn-brand w-100 d-flex align-items-center justify-content-center gap-2 py-2">
+          <i class="bi bi-telephone-fill"></i> Direct Contact: 9876543210
+        </a>
+      </div>
+
+      <div class="pt-3 border-top border-subtle mt-3 text-center">
+        <button type="button" class="btn btn-sm btn-outline-secondary w-100 py-2" data-bs-dismiss="offcanvas">
+          <i class="bi bi-arrow-left me-1"></i> Close Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Hero & Showcase -->
+  <main class="main-content">
+    <div class="container py-4 py-md-5">
+
+      <!-- Dynamic Role Alert Banner -->
+      <div id="roleAlertBanner" class="alert alert-success d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4 rounded-4 shadow-sm border-0" style="background: var(--brand-primary-light); color: var(--brand-primary);">
+        <div class="d-flex align-items-center gap-3">
+          <i id="roleAlertIcon" class="bi bi-person-badge-fill fs-3"></i>
+          <div>
+            <strong id="roleAlertTitle">Logged in as Worker (Ramesh Kumar):</strong>
+            <span id="roleAlertDesc" class="d-block small">You have access to check nearby job openings, compare transparent daily wages, and apply directly.</span>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-brand-outline text-nowrap" data-bs-toggle="modal" data-bs-target="#workerLoginModal">
+            <i class="bi bi-person-badge me-1"></i> Worker Login
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#contractorLoginModal">
+            <i class="bi bi-building me-1"></i> Contractor Login
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Section -->
+      <div class="row align-items-center mb-5 g-4">
+        <div class="col-lg-7 text-center text-lg-start">
+          <div class="badge-chip badge-chip-brand mb-3">
+            <i class="bi bi-shield-check"></i> Local Daily Wage Community Hub
+          </div>
+          <h1 class="display-4 fw-extrabold mb-3 lh-sm" style="color: var(--text-main);">
+            Connecting Daily Wage Workers & Contractors, <span style="background: var(--brand-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Directly.</span>
+          </h1>
+          <p class="lead text-muted mb-4">
+            Eliminating middleman gaps. Daily wage workers discover nearby assignments with transparent daily wages, while contractors broadcast and post jobs in under 3 minutes.
+          </p>
+
+          <!-- Separate Role Portals CTA -->
+          <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start mb-4">
+            
+            <!-- Worker Portal CTA: Check Openings -->
+            <a href="#jobs-section" class="btn btn-brand px-4 py-3 d-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-person-badge fs-5"></i>
+              <div class="text-start">
+                <span class="d-block small lh-1 opacity-75">Worker Portal</span>
+                <span class="fs-6 fw-bold">Check Job Openings</span>
+              </div>
+            </a>
+
+            <!-- Contractor Portal CTA: Post a Job Opening -->
+            <button id="heroPostJobBtn" type="button" class="btn btn-brand-outline px-4 py-3 d-flex align-items-center justify-content-center gap-2" onclick="handleHeroPostJobClick()">
+              <i class="bi bi-building fs-5 text-primary"></i>
+              <div class="text-start">
+                <span class="d-block small lh-1 text-muted">Contractor Portal</span>
+                <span class="fs-6 fw-bold">Post a Job Opening</span>
+              </div>
+            </button>
+          </div>
+
+          <div class="d-flex align-items-center gap-4 text-muted small justify-content-center justify-content-lg-start">
+            <div><i class="bi bi-check-circle-fill text-success"></i> Zero Commissions</div>
+            <div><i class="bi bi-check-circle-fill text-success"></i> Direct Phone & Chat</div>
+            <div><i class="bi bi-check-circle-fill text-success"></i> Direct Payouts</div>
+          </div>
+        </div>
+
+        <!-- Today's Live Market Pulse -->
+        <div class="col-lg-5">
+          <div class="glass-panel p-4 p-md-5">
+            <h4 class="fw-bold mb-4" style="color: var(--text-main);">
+              <i class="bi bi-graph-up-arrow me-2" style="color: var(--brand-primary);"></i>
+              Live Market Pulse
+            </h4>
+
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="app-card p-3 text-center">
+                  <span id="marketOpenJobsCount" class="display-6 fw-bold text-success d-block">4+</span>
+                  <small class="text-muted fw-semibold">Open Jobs Available</small>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="app-card p-3 text-center">
+                  <span class="display-6 fw-bold d-block" style="color: var(--brand-primary);">180+</span>
+                  <small class="text-muted fw-semibold">Verified Workers</small>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="app-card p-3 text-center">
+                  <span class="display-6 fw-bold text-warning d-block">35+</span>
+                  <small class="text-muted fw-semibold">Contractors</small>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="app-card p-3 text-center">
+                  <span class="display-6 fw-bold d-block" style="color: var(--text-main);">₹850</span>
+                  <small class="text-muted fw-semibold">Avg. Daily Wage</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 p-3 rounded-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-lightning-charge-fill text-warning"></i>
+                <span class="fw-bold small" style="color: var(--text-main);">Fast Local Matching</span>
+              </div>
+              <small class="text-muted">Workers check openings and connect directly with hiring contractors in Bengaluru.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Openings Section (The User checks openings here, Contractor posts here) -->
+      <div id="jobs-section" class="pt-3 mb-5">
+        
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <h3 class="fw-bold mb-0" style="color: var(--text-main);">Available Daily Job Openings</h3>
+              <span id="openingsCountBadge" class="badge-chip badge-chip-brand">4 Openings</span>
+            </div>
+            <p class="text-muted small mb-0">Daily wage workers can search, filter, and inspect detailed job specifications.</p>
+          </div>
+
+          <!-- Contractor Job Post Button -->
+          <button type="button" class="btn btn-brand d-inline-flex align-items-center gap-2" onclick="handleHeroPostJobClick()">
+            <i class="bi bi-plus-lg"></i> Post a New Job Opening
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-box-wrap mb-3">
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" id="jobSearchInput" placeholder="Search openings by skill, locality, or trade (e.g. Electrician, Painter, Mason)..." oninput="filterJobs()">
+        </div>
+
+        <!-- Trade Filter Chips -->
+        <div class="category-filter-strip mb-4">
+          <button class="category-chip-btn active" onclick="setJobCategory('all', this)"><i class="bi bi-grid-fill"></i> All Openings</button>
+          <button class="category-chip-btn" onclick="setJobCategory('Electrical', this)"><i class="bi bi-lightning-charge"></i> Electrical</button>
+          <button class="category-chip-btn" onclick="setJobCategory('Painting', this)"><i class="bi bi-paint-bucket"></i> Painting</button>
+          <button class="category-chip-btn" onclick="setJobCategory('Construction', this)"><i class="bi bi-building"></i> Construction</button>
+          <button class="category-chip-btn" onclick="setJobCategory('Plumbing', this)"><i class="bi bi-wrench"></i> Plumbing</button>
+          <button class="category-chip-btn" onclick="setJobCategory('Carpentry', this)"><i class="bi bi-hammer"></i> Carpentry</button>
+        </div>
+
+        <!-- Dynamic Job Openings Grid Container -->
+        <div class="row g-3" id="jobsGridContainer">
+          <!-- Job Cards rendered dynamically by JavaScript -->
+        </div>
+
+      </div>
+
+      <!-- Core Platform Pillars -->
+      <h3 class="fw-bold mb-3" style="color: var(--text-main);">Separate Portals for Workers & Contractors</h3>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="app-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="rounded-circle p-3 text-success" style="background: var(--brand-primary-light);">
+                <i class="bi bi-person-badge fs-3"></i>
+              </div>
+              <div>
+                <h5 class="fw-bold mb-0" style="color: var(--text-main);">Daily Wage Worker Portal</h5>
+                <small class="text-muted">For workers searching for assignments</small>
+              </div>
+            </div>
+            <ul class="text-muted small mb-3 ps-3">
+              <li>Check live verified job openings nearby</li>
+              <li>View transparent expected daily wages</li>
+              <li>Verified worker ratings and genuine employer reviews</li>
+            </ul>
+            <button type="button" class="btn btn-sm btn-brand-outline" data-bs-toggle="modal" data-bs-target="#workerLoginModal">
+              Open Worker Login <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="app-card p-4 h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="rounded-circle p-3 text-primary" style="background: #e0f2fe;">
+                <i class="bi bi-building fs-3"></i>
+              </div>
+              <div>
+                <h5 class="fw-bold mb-0" style="color: var(--text-main);">Contractor & Builder Portal</h5>
+                <small class="text-muted">For contractors hiring skilled labor</small>
+              </div>
+            </div>
+            <ul class="text-muted small mb-3 ps-3">
+              <li>Broadcast short-term daily assignments in under 3 minutes</li>
+              <li>Define custom wage rates and required toolsets</li>
+              <li>Connect directly with available workers via call & chat</li>
+            </ul>
+            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#contractorLoginModal">
+              Open Contractor Login <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       SEPARATE LOGIN MODAL 1: Dedicated Worker Login Modal
+       ========================================================================= -->
+  <div class="modal fade" id="workerLoginModal" tabindex="-1" aria-labelledby="workerLoginModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="background-color: var(--bg-surface); color: var(--text-main); border: 1.5px solid var(--brand-primary); border-radius: var(--radius-md);">
+        
+        <div class="modal-header border-bottom border-subtle">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center text-white" style="background: var(--brand-gradient); width: 34px; height: 34px;">
+              <i class="bi bi-person-badge fs-6"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="workerLoginModalTitle">Worker / Daily Wage User Login</h5>
+              <small class="text-muted">Check Openings & View Employer Reviews</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          
+          <div class="p-3 mb-3 rounded-3" style="background: var(--brand-primary-light);">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="bi bi-shield-check" style="color: var(--brand-primary);"></i>
+              <span class="fw-bold small" style="color: var(--brand-primary);">Worker Dashboard Access</span>
+            </div>
+            <small class="text-muted">Browse nearby daily openings, inspect day rates, and connect with hiring contractors.</small>
+          </div>
+
+          <form onsubmit="handleWorkerLoginSubmit(event)">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Worker Mobile Number</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-subtle"><i class="bi bi-phone text-muted"></i></span>
+                <input type="tel" class="form-control" id="workerPhoneInput" value="9876543210" placeholder="10-digit mobile number" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Security PIN</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-subtle"><i class="bi bi-key text-muted"></i></span>
+                <input type="password" class="form-control" value="1234" placeholder="4-digit PIN" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold mb-3">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Log In as Worker
+            </button>
+          </form>
+
+          <!-- 1-Click Worker Demo Shortcut -->
+          <div class="mt-2">
+            <button type="button" class="btn btn-sm btn-outline-success w-100 py-2 d-flex align-items-center justify-content-center gap-2" onclick="loginAs('worker')">
+              <i class="bi bi-lightning-charge-fill"></i> 1-Click Worker Login: Ramesh Kumar (Electrician)
+            </button>
+          </div>
+
+          <div class="text-center pt-3 border-top border-subtle mt-4">
+            <small class="text-muted">Are you a contractor or builder?</small>
+            <div>
+              <button type="button" class="btn btn-link btn-sm text-primary p-0 fw-semibold text-decoration-none" onclick="switchToContractorModal()">
+                Switch to Contractor Login <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SEPARATE LOGIN MODAL 2: Dedicated Contractor Login Modal
+       ========================================================================= -->
+  <div class="modal fade" id="contractorLoginModal" tabindex="-1" aria-labelledby="contractorLoginModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="background-color: var(--bg-surface); color: var(--text-main); border: 1.5px solid #0284c7; border-radius: var(--radius-md);">
+        
+        <div class="modal-header border-bottom border-subtle">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center text-white" style="background: #0284c7; width: 34px; height: 34px;">
+              <i class="bi bi-building fs-6"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="contractorLoginModalTitle">Contractor Portal Login</h5>
+              <small class="text-muted">Post Daily Jobs & Hire Skilled Labor</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          
+          <div class="p-3 mb-3 rounded-3" style="background: #e0f2fe;">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="bi bi-building-check text-primary"></i>
+              <span class="fw-bold small text-primary">Contractor Job Posting Privileges</span>
+            </div>
+            <small class="text-muted">Broadcast daily assignments, set wage rates, and hire rated workers in Bengaluru.</small>
+          </div>
+
+          <form onsubmit="handleContractorLoginSubmit(event)">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Company / Contractor Username</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-subtle"><i class="bi bi-building text-muted"></i></span>
+                <input type="text" class="form-control" id="contractorUsernameInput" value="buildwell_infra" placeholder="e.g. buildwell_infra" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-subtle"><i class="bi bi-key text-muted"></i></span>
+                <input type="password" class="form-control" value="••••••••" placeholder="Password" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mb-3">
+              <i class="bi bi-building-check me-1"></i> Log In as Contractor
+            </button>
+          </form>
+
+          <!-- 1-Click Contractor Demo Shortcut -->
+          <div class="mt-2">
+            <button type="button" class="btn btn-sm btn-outline-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2" onclick="loginAs('contractor')">
+              <i class="bi bi-lightning-charge-fill"></i> 1-Click Contractor Login: Rajesh Sharma (BuildWell)
+            </button>
+          </div>
+
+          <div class="text-center pt-3 border-top border-subtle mt-4">
+            <small class="text-muted">Are you a daily wage worker looking for work?</small>
+            <div>
+              <button type="button" class="btn btn-link btn-sm text-success p-0 fw-semibold text-decoration-none" onclick="switchToWorkerModal()">
+                Switch to Worker Login <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: Contractor "Post a Job" Modal
+       ========================================================================= -->
+  <div class="modal fade" id="postJobModal" tabindex="-1" aria-labelledby="postJobModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="background-color: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+        
+        <div class="modal-header border-bottom border-subtle">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center text-white" style="background: var(--brand-gradient); width: 34px; height: 34px;">
+              <i class="bi bi-plus-lg fs-6"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="postJobModalTitle">Post a Daily Wage Job Opening</h5>
+              <small class="text-muted">Contractor Portal • Instant Local Broadcast</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="postJobForm" onsubmit="handlePostJobSubmit(event)">
+          <div class="modal-body p-4">
+            
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Job Title *</label>
+              <input type="text" class="form-control" id="postJobTitle" placeholder="e.g. Need 3 Experienced Masons for Boundary Wall Plastering" required>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Trade Category *</label>
+                <select class="form-select" id="postJobCategory" required>
+                  <option value="Electrical">Electrical Work</option>
+                  <option value="Painting" selected>Painting & Whitewashing</option>
+                  <option value="Construction">Construction & Masonry</option>
+                  <option value="Plumbing">Plumbing & Sanitary</option>
+                  <option value="Carpentry">Carpentry & Woodwork</option>
+                  <option value="Housekeeping">Housekeeping & Cleaning</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Daily Wage Offered (₹/day) *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-subtle">₹</span>
+                  <input type="number" class="form-control" id="postJobWage" placeholder="e.g. 850" min="400" max="3000" value="850" required>
+                  <span class="input-group-text bg-transparent border-subtle">/day</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Job Scope & Requirements *</label>
+              <textarea rows="3" class="form-control" id="postJobDesc" placeholder="Describe the task details, tools required, and site conditions..." required>Wall putty sanding and emulsion painting on 2nd floor. Ladders and materials provided on site. Prompt evening daily settlement.</textarea>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Site Address / Locality *</label>
+                <input type="text" class="form-control" id="postJobLocation" placeholder="e.g. Indiranagar 100ft Road, Bengaluru" value="Indiranagar 100ft Road, Bengaluru" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-semibold small">Workers Needed *</label>
+                <input type="number" class="form-control" id="postJobWorkers" value="2" min="1" max="20" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-semibold small">Duration *</label>
+                <input type="text" class="form-control" id="postJobDuration" value="2 Days (9 AM - 6 PM)" required>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Contractor / Supervisor Name *</label>
+                <input type="text" class="form-control" id="postJobContractor" value="BuildWell Infrastructure (Rajesh Sharma)" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Contact Phone Number *</label>
+                <input type="text" class="form-control" id="postJobPhone" value="9845012345" required>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer border-top border-subtle">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-brand px-4">
+              <i class="bi bi-broadcast me-1"></i> Broadcast & Post Job
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: In-Page Job Details Modal (User checks openings here)
+       ========================================================================= -->
+  <div class="modal fade" id="jobDetailModal" tabindex="-1" aria-labelledby="jobDetailModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="background-color: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+        
+        <div class="modal-header border-bottom border-subtle">
+          <div class="d-flex align-items-center gap-2">
+            <span id="modalJobCategoryBadge" class="badge-chip badge-chip-brand">Category</span>
+            <span id="modalJobWagePill" class="wage-pill">₹0/day</span>
+          </div>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <h5 class="fw-bold mb-2" id="modalJobTitle">Job Title</h5>
+          <p class="text-muted small mb-3" id="modalJobDesc">Job description details</p>
+
+          <div class="p-3 rounded-3 mb-3" style="background: var(--bg-canvas); border: 1px solid var(--border-subtle);">
+            <div class="small mb-1"><i class="bi bi-geo-alt-fill text-danger me-2"></i><strong>Location:</strong> <span id="modalJobLocation">-</span></div>
+            <div class="small mb-1"><i class="bi bi-clock me-2"></i><strong>Schedule & Duration:</strong> <span id="modalJobDuration">-</span></div>
+            <div class="small mb-1"><i class="bi bi-people me-2"></i><strong>Workers Required:</strong> <span id="modalJobWorkers">-</span></div>
+            <div class="small"><i class="bi bi-building me-2 text-primary"></i><strong>Hiring Contractor:</strong> <span id="modalJobContractor">-</span></div>
+          </div>
+
+          <div class="d-grid gap-2">
+            <a id="modalJobCallBtn" href="tel:9845012345" class="btn btn-brand py-2">
+              <i class="bi bi-telephone-fill me-1"></i> Call Contractor Directly
+            </a>
+            <button type="button" class="btn btn-outline-secondary py-2" onclick="handleApplyDirect()">
+              <i class="bi bi-send-check me-1"></i> Send 1-Click Application
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+    <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage">
+          Action completed successfully!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/theme.js"></script>
+  
+  <!-- Main Platform Logic: Roles, Checking Openings, & Posting Work -->
+  <script>
+    // State management
+    const AppData = {
+      role: 'worker', // 'worker' (Daily Wage User) or 'contractor'
+      currentCategory: 'all',
+      jobs: [
+        {
+          id: 1,
+          title: "Need 2 Electricians for 3BHK Conduit Wiring",
+          category: "Electrical",
+          wage: 900,
+          desc: "Concealed conduit wiring, wall chasing already completed. Requires distribution box assembly and line testing. Ladders provided on-site.",
+          location: "Indiranagar 12th Main (2.1 km away)",
+          duration: "2 Days (9:00 AM - 6:00 PM)",
+          workers: 2,
+          contractor: "Prestige Renovations",
+          rating: "4.9 (18 reviews)",
+          phone: "9876543210"
+        },
+        {
+          id: 2,
+          title: "Need 4 Painters for Putty & Emulsion Coating",
+          category: "Painting",
+          wage: 850,
+          desc: "Fresh painting for residential duplex in Defence Colony. Putty sanding, primer coat, and 2-coat emulsion roller finish.",
+          location: "Defence Colony, Indiranagar (2.8 km away)",
+          duration: "4 Days (9:00 AM - 5:30 PM)",
+          workers: 4,
+          contractor: "BuildWell Infrastructure",
+          rating: "4.8 (21 reviews)",
+          phone: "9845012345"
+        },
+        {
+          id: 3,
+          title: "3 Skilled Masons for Commercial Plastering",
+          category: "Construction",
+          wage: 950,
+          desc: "Interior brickwork and wall cement plastering on 2nd floor of commercial complex. Prompt evening daily settlement.",
+          location: "Koramangala 80ft Road (1.4 km away)",
+          duration: "3 Days (8:30 AM - 5:30 PM)",
+          workers: 3,
+          contractor: "Apex Contractors",
+          rating: "4.9 (26 reviews)",
+          phone: "9812345678"
+        },
+        {
+          id: 4,
+          title: "Need 2 Plumbers for PVC Drainage Line Fitting",
+          category: "Plumbing",
+          wage: 900,
+          desc: "External bathroom rainwater drain pipe replacement and PVC valve fixing. Basic pipe wrenches required.",
+          location: "HSR Layout Sector 2 (3.5 km away)",
+          duration: "1 Day (9:00 AM - 5:00 PM)",
+          workers: 2,
+          contractor: "Sunrise Developers",
+          rating: "4.7 (12 reviews)",
+          phone: "9898989898"
+        }
+      ]
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('role') === 'contractor') {
+        AppData.role = 'contractor';
+      } else if (params.get('role') === 'worker') {
+        AppData.role = 'worker';
+      } else {
+        AppData.role = localStorage.getItem('rojgar_active_role') || 'worker';
+      }
+
+      applyRoleUI(AppData.role);
+      renderJobs();
+    });
+
+    // Modal switching helpers for separate logins
+    function switchToContractorModal() {
+      const workerModal = bootstrap.Modal.getInstance(document.getElementById('workerLoginModal'));
+      if (workerModal) workerModal.hide();
+      setTimeout(() => {
+        const contractorModal = new bootstrap.Modal(document.getElementById('contractorLoginModal'));
+        contractorModal.show();
+      }, 300);
+    }
+
+    function switchToWorkerModal() {
+      const contractorModal = bootstrap.Modal.getInstance(document.getElementById('contractorLoginModal'));
+      if (contractorModal) contractorModal.hide();
+      setTimeout(() => {
+        const workerModal = new bootstrap.Modal(document.getElementById('workerLoginModal'));
+        workerModal.show();
+      }, 300);
+    }
+
+    function handleWorkerLoginSubmit(e) {
+      e.preventDefault();
+      loginAs('worker');
+    }
+
+    function handleContractorLoginSubmit(e) {
+      e.preventDefault();
+      loginAs('contractor');
+    }
+
+    // Role application function
+    function loginAs(newRole) {
+      AppData.role = newRole;
+      localStorage.setItem('rojgar_active_role', newRole);
+      applyRoleUI(newRole);
+      
+      // Close any open login modal
+      const workerModalEl = document.getElementById('workerLoginModal');
+      const workerModal = bootstrap.Modal.getInstance(workerModalEl);
+      if (workerModal) workerModal.hide();
+
+      const contractorModalEl = document.getElementById('contractorLoginModal');
+      const contractorModal = bootstrap.Modal.getInstance(contractorModalEl);
+      if (contractorModal) contractorModal.hide();
+
+      showToast(newRole === 'worker' ? 'Logged in as Worker (Ramesh Kumar)' : 'Logged in as Contractor (Rajesh Sharma)');
+    }
+
+    // Apply UI state changes based on role
+    function applyRoleUI(role) {
+      const isContractor = role === 'contractor';
+
+      const navRolePill = document.getElementById('navRolePill');
+      const navRoleText = document.getElementById('navRoleText');
+      const navPostJobBtn = document.getElementById('navPostJobBtn');
+      const drawerPostJobLink = document.getElementById('drawerPostJobLink');
+      const drawerWorkerProfile = document.getElementById('drawerWorkerProfileSection');
+      const drawerContractorProfile = document.getElementById('drawerContractorProfileSection');
+      const drawerActiveRoleLabel = document.getElementById('drawerActiveRoleLabel');
+
+      const bannerTitle = document.getElementById('roleAlertTitle');
+      const bannerDesc = document.getElementById('roleAlertDesc');
+      const bannerIcon = document.getElementById('roleAlertIcon');
+
+      if (isContractor) {
+        navRolePill.className = 'badge-chip role-badge-contractor';
+        navRoleText.textContent = 'Logged In: Contractor (Rajesh Sharma)';
+        navPostJobBtn.classList.remove('d-none');
+        navPostJobBtn.classList.add('d-inline-flex');
+        
+        drawerPostJobLink.classList.remove('d-none');
+        drawerWorkerProfile.classList.add('d-none');
+        drawerContractorProfile.classList.remove('d-none');
+        drawerActiveRoleLabel.textContent = 'Contractor (BuildWell Infra)';
+        drawerActiveRoleLabel.style.color = '#0284c7';
+
+        bannerIcon.className = 'bi bi-building-fill fs-3 text-primary';
+        bannerTitle.textContent = 'Logged in as Contractor (Rajesh Sharma - BuildWell):';
+        bannerDesc.textContent = 'You have contractor privileges: Broadcast and post new daily job openings to local skilled labor.';
+      } else {
+        navRolePill.className = 'badge-chip role-badge-worker';
+        navRoleText.textContent = 'Logged In: Worker (Ramesh Kumar)';
+        navPostJobBtn.classList.add('d-none');
+        navPostJobBtn.classList.remove('d-inline-flex');
+
+        drawerPostJobLink.classList.add('d-none');
+        drawerWorkerProfile.classList.remove('d-none');
+        drawerContractorProfile.classList.add('d-none');
+        drawerActiveRoleLabel.textContent = 'Daily Wage Worker';
+        drawerActiveRoleLabel.style.color = 'var(--brand-primary)';
+
+        bannerIcon.className = 'bi bi-person-badge-fill fs-3';
+        bannerTitle.textContent = 'Logged in as Worker (Ramesh Kumar):';
+        bannerDesc.textContent = 'You have access to check nearby job openings, compare transparent daily wages, and apply directly.';
+      }
+    }
+
+    // Hero Post Job Button handler (guards permissions)
+    function handleHeroPostJobClick() {
+      if (AppData.role !== 'contractor') {
+        // If daily wage user clicks post job, open dedicated contractor login modal
+        const contractorModal = new bootstrap.Modal(document.getElementById('contractorLoginModal'));
+        contractorModal.show();
+        showToast('Please log in with a Contractor account to post jobs.');
+      } else {
+        const postModal = new bootstrap.Modal(document.getElementById('postJobModal'));
+        postModal.show();
+      }
+    }
+
+    function triggerPostJobFromDrawer() {
+      const drawerEl = document.getElementById('appDrawer');
+      const drawer = bootstrap.Offcanvas.getInstance(drawerEl);
+      if (drawer) drawer.hide();
+      handleHeroPostJobClick();
+    }
+
+    // Render Job Openings
+    function renderJobs() {
+      const container = document.getElementById('jobsGridContainer');
+      const searchVal = (document.getElementById('jobSearchInput').value || '').toLowerCase();
+      
+      const filtered = AppData.jobs.filter(job => {
+        const matchesCategory = AppData.currentCategory === 'all' || job.category.toLowerCase() === AppData.currentCategory.toLowerCase();
+        const matchesSearch = !searchVal || 
+          job.title.toLowerCase().includes(searchVal) ||
+          job.desc.toLowerCase().includes(searchVal) ||
+          job.category.toLowerCase().includes(searchVal) ||
+          job.location.toLowerCase().includes(searchVal);
+        return matchesCategory && matchesSearch;
+      });
+
+      document.getElementById('openingsCountBadge').textContent = `${filtered.length} Openings`;
+      document.getElementById('marketOpenJobsCount').textContent = `${AppData.jobs.length}+`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <i class="bi bi-search fs-1 text-muted mb-2 d-block"></i>
+            <h5 class="fw-bold" style="color: var(--text-main);">No matching job openings found</h5>
+            <p class="text-muted small">Try searching another skill or trade category.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(job => `
+        <div class="col-md-6 col-lg-4" id="job-card-${job.id}">
+          <div class="app-card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge-chip badge-chip-brand">${escapeHtml(job.category)}</span>
+                <span class="wage-pill">₹${job.wage}/day</span>
+              </div>
+              <h5 class="fw-bold mb-1" style="color: var(--text-main); font-size: 1.05rem;">${escapeHtml(job.title)}</h5>
+              <p class="text-muted small mb-2" style="font-size: 0.85rem;">${escapeHtml(job.desc)}</p>
+              
+              <div class="small text-muted mb-2">
+                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>${escapeHtml(job.location)}</div>
+                <div><i class="bi bi-clock me-1"></i>${escapeHtml(job.duration)}</div>
+                <div><i class="bi bi-building me-1 text-primary"></i>Contractor: <strong>${escapeHtml(job.contractor)}</strong></div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <span class="star-rating small"><i class="bi bi-star-fill"></i> ${escapeHtml(job.rating)}</span>
+              <button type="button" class="btn btn-sm btn-brand" onclick="openJobDetails(${job.id})">
+                Check Details
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setJobCategory(category, btnElement) {
+      AppData.currentCategory = category;
+      document.querySelectorAll('.category-chip-btn').forEach(btn => btn.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+      renderJobs();
+    }
+
+    function filterJobs() {
+      renderJobs();
+    }
+
+    // Open detailed modal for checking openings
+    function openJobDetails(jobId) {
+      const job = AppData.jobs.find(j => j.id === jobId);
+      if (!job) return;
+
+      document.getElementById('modalJobTitle').textContent = job.title;
+      document.getElementById('modalJobDesc').textContent = job.desc;
+      document.getElementById('modalJobCategoryBadge').textContent = job.category;
+      document.getElementById('modalJobWagePill').textContent = `₹${job.wage}/day`;
+      document.getElementById('modalJobLocation').textContent = job.location;
+      document.getElementById('modalJobDuration').textContent = job.duration;
+      document.getElementById('modalJobWorkers').textContent = `${job.workers} Worker(s) needed`;
+      document.getElementById('modalJobContractor').textContent = `${job.contractor} (★ ${job.rating})`;
+      document.getElementById('modalJobCallBtn').href = `tel:${job.phone}`;
+
+      const modal = new bootstrap.Modal(document.getElementById('jobDetailModal'));
+      modal.show();
+    }
+
+    function handleApplyDirect() {
+      const modalEl = document.getElementById('jobDetailModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+      showToast('Application sent directly to contractor! They will call you shortly.');
+    }
+
+    // Contractor Form Submit: Add Job
+    function handlePostJobSubmit(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('postJobTitle').value.trim();
+      const category = document.getElementById('postJobCategory').value;
+      const wage = parseInt(document.getElementById('postJobWage').value) || 850;
+      const desc = document.getElementById('postJobDesc').value.trim();
+      const location = document.getElementById('postJobLocation').value.trim();
+      const workers = parseInt(document.getElementById('postJobWorkers').value) || 1;
+      const duration = document.getElementById('postJobDuration').value.trim();
+      const contractor = document.getElementById('postJobContractor').value.trim();
+      const phone = document.getElementById('postJobPhone').value.trim();
+
+      const newJob = {
+        id: Date.now(),
+        title: title,
+        category: category,
+        wage: wage,
+        desc: desc,
+        location: location,
+        duration: duration,
+        workers: workers,
+        contractor: contractor,
+        rating: "New Listing",
+        phone: phone
+      };
+
+      AppData.jobs.unshift(newJob);
+
+      const modalEl = document.getElementById('postJobModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+
+      document.getElementById('postJobForm').reset();
+      renderJobs();
+
+      const card = document.getElementById(`job-card-${newJob.id}`);
+      if (card) {
+        card.classList.add('job-card-new');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      showToast(`New job posted! Daily wage workers can now check and apply.`);
+    }
+
+    function showToast(message) {
+      const toastEl = document.getElementById('liveToast');
+      document.getElementById('toastMessage').textContent = message;
+      const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+      toast.show();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
