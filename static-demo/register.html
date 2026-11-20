@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="green" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Register - RojgarSetu Platform (Demo)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="app-navbar">
+    <div class="container-fluid px-3 px-md-4">
+      <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
+          <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-gradient); color: #fff; width: 38px; height: 38px;">
+            <i class="bi bi-tools fs-5"></i>
+          </div>
+          <div>
+            <span class="fw-bold fs-5 d-block lh-1" style="color: var(--text-main);">RojgarSetu</span>
+            <small class="text-muted" style="font-size: 0.70rem; font-weight: 600; letter-spacing: 0.5px;">DAILY WAGE PLATFORM</small>
+          </div>
+        </a>
+
+        <div class="d-flex align-items-center gap-2">
+          <!-- Palette Toggle -->
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 border-0" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-palette-fill" style="color: var(--brand-primary);"></i>
+              <span class="d-none d-sm-inline small fw-semibold">Theme</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" style="background-color: var(--bg-surface);">
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('green')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #059669;"></span>
+                  <span>Emerald Green & White</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('brown')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #92400e;"></span>
+                  <span>Warm Earth & Soft Beige</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dark/Light Toggle -->
+          <button class="btn btn-sm btn-outline-secondary border-0 p-2" type="button" onclick="DemoTheme.toggleMode()" title="Toggle Dark/Light Mode">
+            <i class="bi bi-moon-stars-fill" style="color: var(--text-muted);"></i>
+          </button>
+
+          <a href="login.html" class="btn btn-sm btn-brand-outline">Log In</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-7">
+          <div class="glass-panel p-4 p-md-5">
+
+            <div class="text-center mb-4">
+              <div class="rounded-circle d-inline-flex p-3 mb-2" style="background: var(--brand-primary-light); color: var(--brand-primary);">
+                <i class="bi bi-person-plus fs-2"></i>
+              </div>
+              <h3 class="fw-bold mb-1" style="color: var(--text-main);">Create Your Profile</h3>
+              <p class="text-muted small">Select your role to view registration requirements</p>
+            </div>
+
+            <!-- Role Selector Tabs -->
+            <ul class="nav nav-pills nav-fill mb-4 p-1 rounded-pill" style="background-color: var(--border-subtle);" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill py-2 fw-semibold active" id="reg-worker-tab" data-bs-toggle="pill" data-bs-target="#reg-worker-pane" type="button" role="tab" style="background: var(--brand-gradient); color: #fff;">
+                  <i class="bi bi-person-badge me-1"></i> I am a Worker
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill py-2 fw-semibold" id="reg-contractor-tab" data-bs-toggle="pill" data-bs-target="#reg-contractor-pane" type="button" role="tab">
+                  <i class="bi bi-building me-1"></i> I am a Contractor
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <!-- Worker Registration Form -->
+              <div class="tab-pane fade show active" id="reg-worker-pane" role="tabpanel">
+                <form action="worker-dashboard.html" method="GET">
+                  <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Full Name *</label>
+                      <input type="text" class="form-control" value="Ramesh Kumar" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Username *</label>
+                      <input type="text" class="form-control" value="ramesh_electrician" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Mobile Phone *</label>
+                      <input type="text" class="form-control" value="9876543210" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Locality / Area in City *</label>
+                      <input type="text" class="form-control" value="Indiranagar, Bengaluru" required>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold small">Primary Skills (Comma-separated) *</label>
+                    <input type="text" class="form-control" value="Electrician, Inverter Wiring, DB Box Fitting" required>
+                  </div>
+
+                  <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Expected Daily Wage (₹) *</label>
+                      <input type="number" class="form-control" value="850" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Experience (Years) *</label>
+                      <input type="number" step="0.5" class="form-control" value="5.0" required>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label class="form-label fw-semibold small">Languages Known</label>
+                    <input type="text" class="form-control" value="Kannada, Hindi, English">
+                  </div>
+
+                  <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold">
+                    Complete Worker Registration (Demo) <i class="bi bi-arrow-right ms-1"></i>
+                  </button>
+                </form>
+              </div>
+
+              <!-- Contractor Registration Form -->
+              <div class="tab-pane fade" id="reg-contractor-pane" role="tabpanel">
+                <form action="contractor-dashboard.html" method="GET">
+                  <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Contact Person Name *</label>
+                      <input type="text" class="form-control" value="Rajesh Sharma" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Company / Employer Name *</label>
+                      <input type="text" class="form-control" value="BuildWell Infrastructure" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Contractor Type *</label>
+                      <select class="form-select">
+                        <option selected>Construction Contractor</option>
+                        <option>Individual / Household</option>
+                        <option>Facility Management</option>
+                        <option>Interior & Renovation</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label fw-semibold small">Contact Mobile *</label>
+                      <input type="text" class="form-control" value="9845012345" required>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label class="form-label fw-semibold small">Office or Site Locality *</label>
+                    <input type="text" class="form-control" value="Koramangala 4th Block, Bengaluru" required>
+                  </div>
+
+                  <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold">
+                    Complete Contractor Registration (Demo) <i class="bi bi-arrow-right ms-1"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="text-center pt-4 border-top border-subtle mt-4">
+              <p class="text-muted small mb-0">
+                Already registered? 
+                <a href="login.html" class="fw-bold text-decoration-none" style="color: var(--brand-primary);">Log In Here</a>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    const regWorkerTab = document.getElementById('reg-worker-tab');
+    const regContractorTab = document.getElementById('reg-contractor-tab');
+    
+    regWorkerTab.addEventListener('click', () => {
+      regWorkerTab.style.background = 'var(--brand-gradient)';
+      regWorkerTab.style.color = '#fff';
+      regContractorTab.style.background = 'transparent';
+      regContractorTab.style.color = 'var(--text-main)';
+    });
+
+    regContractorTab.addEventListener('click', () => {
+      regContractorTab.style.background = 'var(--brand-gradient)';
+      regContractorTab.style.color = '#fff';
+      regWorkerTab.style.background = 'transparent';
+      regWorkerTab.style.color = 'var(--text-main)';
+    });
+  </script>
+</body>
+</html>

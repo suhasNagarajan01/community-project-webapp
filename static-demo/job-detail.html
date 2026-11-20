@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="green" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Job Details - RojgarSetu (Demo)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="app-navbar">
+    <div class="container-fluid px-3 px-md-4">
+      <div class="d-flex align-items-center justify-content-between">
+        
+        <div class="d-flex align-items-center gap-2">
+          <a href="worker-dashboard.html" class="btn btn-sm btn-outline-secondary border-0 p-1 me-1">
+            <i class="bi bi-arrow-left fs-5"></i>
+          </a>
+          <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
+            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-gradient); color: #fff; width: 38px; height: 38px;">
+              <i class="bi bi-tools fs-5"></i>
+            </div>
+            <div>
+              <span class="fw-bold fs-5 d-block lh-1" style="color: var(--text-main);">RojgarSetu</span>
+              <small class="text-muted" style="font-size: 0.70rem; font-weight: 600; letter-spacing: 0.5px;">DAILY WAGE PLATFORM</small>
+            </div>
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 border-0" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-palette-fill" style="color: var(--brand-primary);"></i>
+              <span class="d-none d-sm-inline small fw-semibold">Theme</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" style="background-color: var(--bg-surface);">
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('green')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #059669;"></span>
+                  <span>Emerald Green & White</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('brown')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #92400e;"></span>
+                  <span>Warm Earth & Soft Beige</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <button class="btn btn-sm btn-outline-secondary border-0 p-2" type="button" onclick="DemoTheme.toggleMode()" title="Toggle Dark/Light Mode">
+            <i class="bi bi-moon-stars-fill" style="color: var(--text-muted);"></i>
+          </button>
+
+          <a href="profile.html" class="d-flex align-items-center gap-2 text-decoration-none">
+            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 38px; height: 38px; background: var(--brand-primary-light); color: var(--brand-primary); border: 2px solid var(--brand-primary);">
+              R
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container py-4">
+
+      <div class="row g-4">
+        <!-- Left: Job Details & Application Box -->
+        <div class="col-lg-8">
+          <div class="app-card p-4 mb-4">
+            
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span class="badge-chip badge-chip-brand">Electrical Work</span>
+                  <span class="badge bg-success-subtle text-success small py-1 px-2 rounded-pill">Status: Open</span>
+                </div>
+                <h2 class="fw-bold mb-1" style="color: var(--text-main);">Need 2 Electricians for 3BHK Conduit Wiring</h2>
+                <div class="text-muted small">Posted 2 hours ago by Prestige Home Renovations</div>
+              </div>
+
+              <span class="wage-pill fs-4">₹900<small class="fs-6 fw-normal">/day</small></span>
+            </div>
+
+            <hr class="border-subtle my-3">
+
+            <div class="row g-3 mb-4">
+              <div class="col-sm-4">
+                <div class="p-3 rounded-3" style="background: var(--bg-canvas);">
+                  <small class="text-muted d-block lh-1 mb-1">DURATION</small>
+                  <div class="fw-bold" style="color: var(--text-main);"><i class="bi bi-clock me-1"></i>2 Days (9 AM - 6 PM)</div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="p-3 rounded-3" style="background: var(--bg-canvas);">
+                  <small class="text-muted d-block lh-1 mb-1">START DATE</small>
+                  <div class="fw-bold" style="color: var(--text-main);"><i class="bi bi-calendar-event me-1"></i>Tomorrow Morning</div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="p-3 rounded-3" style="background: var(--bg-canvas);">
+                  <small class="text-muted d-block lh-1 mb-1">SLOTS OPEN</small>
+                  <div class="fw-bold" style="color: var(--text-main);"><i class="bi bi-people me-1"></i>1 / 2 Hired</div>
+                </div>
+              </div>
+            </div>
+
+            <h5 class="fw-bold mb-2" style="color: var(--text-main);">Work Scope & Requirements</h5>
+            <p class="text-muted mb-4" style="line-height: 1.6;">
+              Complete rewiring of 3BHK apartment in Indiranagar. Wall chasing has already been completed. Need 2 qualified electricians with basic wiring tools (strippers, pliers, testers). Distribution box (DB) assembly and inverter line hookup. High daily wage with direct wallet clearance at 6:00 PM.
+            </p>
+
+            <h6 class="fw-bold mb-2" style="color: var(--text-main);">Required Skill Set</h6>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+              <span class="badge-chip badge-chip-brand fs-6"><i class="bi bi-wrench-adjustable me-1"></i>Conduit Wiring</span>
+              <span class="badge-chip badge-chip-brand fs-6"><i class="bi bi-wrench-adjustable me-1"></i>DB Box Assembly</span>
+              <span class="badge-chip badge-chip-brand fs-6"><i class="bi bi-wrench-adjustable me-1"></i>Inverter Setup</span>
+            </div>
+
+            <h5 class="fw-bold mb-2" style="color: var(--text-main);">Work Location</h5>
+            <div class="p-3 rounded-3 mb-4 d-flex align-items-center gap-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+              <div class="rounded-circle p-2 bg-danger text-white">
+                <i class="bi bi-geo-alt-fill fs-5"></i>
+              </div>
+              <div>
+                <div class="fw-bold" style="color: var(--text-main);">Indiranagar 12th Main, Near Metro Station, Bengaluru</div>
+                <small class="text-muted">Estimated distance: ~2.1 km from your locality</small>
+              </div>
+            </div>
+
+            <!-- Apply Form Box -->
+            <div class="p-4 rounded-3" style="background: var(--bg-surface); border: 2px dashed var(--brand-primary);">
+              <h5 class="fw-bold mb-1" style="color: var(--text-main);">Apply for This Assignment</h5>
+              <p class="text-muted small mb-3">You will receive ₹900 per day directly to your wallet upon task sign-off.</p>
+              
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">Ready Message / Note for Employer (Demo)</label>
+                <textarea rows="2" class="form-control">I have 5 years experience in conduit wiring and my own toolset. I can reach tomorrow at 8:45 AM.</textarea>
+              </div>
+              <button type="button" class="btn btn-brand px-4 py-2" onclick="alert('Demo: Application submitted! The contractor has been notified on their dashboard.');">
+                <i class="bi bi-send-fill me-1"></i> Confirm & Send Application (Demo)
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Employer Profile Card -->
+        <div class="col-lg-4">
+          <div class="glass-panel p-4 mb-4">
+            <h5 class="fw-bold mb-3" style="color: var(--text-main);">Employer Information</h5>
+
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4" style="width: 56px; height: 56px; background: var(--brand-primary-light); color: var(--brand-primary); border: 2px solid var(--brand-primary);">
+                P
+              </div>
+              <div>
+                <h5 class="fw-bold mb-0" style="color: var(--text-main);">Prestige Renovations</h5>
+                <small class="text-muted">Interior & Renovation Contractor</small>
+                <div class="star-rating small mt-1">
+                  <i class="bi bi-star-fill"></i> 4.88 <span class="text-muted fw-normal">(19 reviews)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-3 mb-3" style="background: var(--bg-canvas);">
+              <div class="small text-muted mb-1"><i class="bi bi-person me-2"></i>Contact Person: <strong>Suresh Reddy</strong></div>
+              <div class="small text-muted mb-1"><i class="bi bi-telephone me-2"></i>Phone: <strong>9880054321</strong></div>
+              <div class="small text-muted"><i class="bi bi-shield-check text-success me-2"></i>Verified Platform Identity</div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <a href="tel:9880054321" class="btn btn-brand-outline d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-telephone-fill"></i> Call Employer Directly
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

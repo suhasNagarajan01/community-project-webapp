@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="green" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Contractor Dashboard - Ranked Daily Wage Workers (Demo)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="app-navbar">
+    <div class="container-fluid px-3 px-md-4">
+      <div class="d-flex align-items-center justify-content-between">
+        
+        <div class="d-flex align-items-center gap-2">
+          <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
+            <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-gradient); color: #fff; width: 38px; height: 38px;">
+              <i class="bi bi-tools fs-5"></i>
+            </div>
+            <div>
+              <span class="fw-bold fs-5 d-block lh-1" style="color: var(--text-main);">RojgarSetu</span>
+              <small class="text-muted" style="font-size: 0.70rem; font-weight: 600; letter-spacing: 0.5px;">DAILY WAGE PLATFORM</small>
+            </div>
+          </a>
+        </div>
+
+        <div class="d-none d-md-flex align-items-center">
+          <span class="badge-chip badge-chip-success">
+            <i class="bi bi-building"></i> Contractor Portal (Logged In: Rajesh Sharma)
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <!-- Palette Toggle -->
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1 border-0" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-palette-fill" style="color: var(--brand-primary);"></i>
+              <span class="d-none d-sm-inline small fw-semibold">Theme</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" style="background-color: var(--bg-surface);">
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('green')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #059669;"></span>
+                  <span>Emerald Green & White</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0)" onclick="DemoTheme.setTheme('brown')">
+                  <span class="rounded-circle d-inline-block" style="width: 14px; height: 14px; background: #92400e;"></span>
+                  <span>Warm Earth & Soft Beige</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dark/Light Toggle -->
+          <button class="btn btn-sm btn-outline-secondary border-0 p-2" type="button" onclick="DemoTheme.toggleMode()" title="Toggle Dark/Light Mode">
+            <i class="bi bi-moon-stars-fill" style="color: var(--text-muted);"></i>
+          </button>
+
+          <a href="post-job.html" class="btn btn-sm btn-brand d-none d-sm-inline-flex align-items-center gap-1">
+            <i class="bi bi-plus-lg"></i> Post a Job
+          </a>
+
+          <a href="login.html" class="btn btn-sm btn-outline-danger border-0">Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container py-3 py-md-4">
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+          <h2 class="fw-bold mb-1" style="color: var(--text-main);">Find & Hire Skilled Workers</h2>
+          <p class="text-muted small mb-0">Ranked by client ratings, reliability scores, and punctuality attendance.</p>
+        </div>
+        <a href="post-job.html" class="btn btn-brand d-inline-flex align-items-center gap-2">
+          <i class="bi bi-plus-lg"></i> Post a Daily Job
+        </a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-box-wrap mb-3">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="Search workers by name, skill, or area (e.g. Electrician, Painter, Indiranagar)...">
+      </div>
+
+      <!-- Trade Chips -->
+      <div class="category-filter-strip mb-3">
+        <button class="category-chip-btn active"><i class="bi bi-people-fill"></i> All Workers</button>
+        <button class="category-chip-btn">Electrician</button>
+        <button class="category-chip-btn">Plumber</button>
+        <button class="category-chip-btn">Painter</button>
+        <button class="category-chip-btn">Mason</button>
+        <button class="category-chip-btn">Housekeeping</button>
+        <button class="category-chip-btn">Security</button>
+      </div>
+
+      <!-- Worker Ranking Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3 px-1 small text-muted fw-semibold">
+        <span>Top Ranked Workers in Bengaluru</span>
+        <span class="badge-chip badge-chip-brand">Sort: Smart Reputation Score</span>
+      </div>
+
+      <!-- Worker Cards Grid (Ranked as per PRD logic) -->
+      <div class="row g-3">
+        
+        <!-- Worker 1: Ramesh Kumar -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 52px; height: 52px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.25rem; border: 2px solid var(--brand-primary);">
+                    R
+                  </div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2">
+                      <h5 class="fw-bold mb-0" style="color: var(--text-main);">Ramesh Kumar</h5>
+                      <i class="bi bi-patch-check-fill text-primary" title="Top Rated & Verified"></i>
+                    </div>
+                    <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Indiranagar, Bengaluru</small>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <span class="badge-chip badge-chip-brand mb-1"><i class="bi bi-trophy-fill text-warning"></i> Rank #1</span>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 4.94 <span class="text-muted fw-normal">(32 reviews)</span></div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-1 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Electrician</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Inverter Wiring</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">DB Box Fitting</span>
+              </div>
+
+              <div class="row g-2 mb-3 p-2 rounded-3 text-center small" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">RELIABILITY</span>
+                  <strong class="text-success fs-6">99%</strong>
+                </div>
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">ATTENDANCE</span>
+                  <strong class="text-primary fs-6">98%</strong>
+                </div>
+                <div class="col-4">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">JOBS DONE</span>
+                  <strong class="fs-6" style="color: var(--text-main);">48 jobs</strong>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between small text-muted mb-2">
+                <span><i class="bi bi-translate me-1"></i>Kannada, Hindi, English</span>
+                <span><i class="bi bi-briefcase me-1"></i>5.5 yrs exp</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div>
+                <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">EXPECTED WAGE</small>
+                <span class="wage-pill p-1 px-2 fs-6">₹850<small class="fw-normal">/day</small></span>
+              </div>
+              <a href="profile.html" class="btn btn-sm btn-brand">View Profile & Hire</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Worker 2: Praveen Acharya -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 52px; height: 52px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.25rem; border: 2px solid var(--brand-primary);">
+                    P
+                  </div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2">
+                      <h5 class="fw-bold mb-0" style="color: var(--text-main);">Praveen Acharya</h5>
+                      <i class="bi bi-patch-check-fill text-primary" title="Top Rated & Verified"></i>
+                    </div>
+                    <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Marathahalli, Bengaluru</small>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <span class="badge-chip badge-chip-brand mb-1"><i class="bi bi-trophy-fill text-warning"></i> Rank #2</span>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 4.97 <span class="text-muted fw-normal">(35 reviews)</span></div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-1 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Carpentry</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Furniture Assembly</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Lock Fitting</span>
+              </div>
+
+              <div class="row g-2 mb-3 p-2 rounded-3 text-center small" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">RELIABILITY</span>
+                  <strong class="text-success fs-6">98%</strong>
+                </div>
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">ATTENDANCE</span>
+                  <strong class="text-primary fs-6">100%</strong>
+                </div>
+                <div class="col-4">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">JOBS DONE</span>
+                  <strong class="fs-6" style="color: var(--text-main);">58 jobs</strong>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between small text-muted mb-2">
+                <span><i class="bi bi-translate me-1"></i>Kannada, Hindi, English</span>
+                <span><i class="bi bi-briefcase me-1"></i>8.0 yrs exp</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div>
+                <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">EXPECTED WAGE</small>
+                <span class="wage-pill p-1 px-2 fs-6">₹1,000<small class="fw-normal">/day</small></span>
+              </div>
+              <a href="profile.html" class="btn btn-sm btn-brand">View Profile & Hire</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Worker 3: Lakshmi Devi -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 52px; height: 52px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.25rem; border: 2px solid var(--brand-primary);">
+                    L
+                  </div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2">
+                      <h5 class="fw-bold mb-0" style="color: var(--text-main);">Lakshmi Devi</h5>
+                      <i class="bi bi-patch-check-fill text-primary"></i>
+                    </div>
+                    <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>HSR Layout, Bengaluru</small>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <span class="badge-chip badge-chip-brand mb-1"><i class="bi bi-trophy-fill text-warning"></i> Rank #3</span>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 4.96 <span class="text-muted fw-normal">(42 reviews)</span></div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-1 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Housekeeping</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Deep Cleaning</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Floor Scrubbing</span>
+              </div>
+
+              <div class="row g-2 mb-3 p-2 rounded-3 text-center small" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">RELIABILITY</span>
+                  <strong class="text-success fs-6">100%</strong>
+                </div>
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">ATTENDANCE</span>
+                  <strong class="text-primary fs-6">99%</strong>
+                </div>
+                <div class="col-4">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">JOBS DONE</span>
+                  <strong class="fs-6" style="color: var(--text-main);">62 jobs</strong>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between small text-muted mb-2">
+                <span><i class="bi bi-translate me-1"></i>Kannada, Telugu, Hindi</span>
+                <span><i class="bi bi-briefcase me-1"></i>3.5 yrs exp</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div>
+                <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">EXPECTED WAGE</small>
+                <span class="wage-pill p-1 px-2 fs-6">₹700<small class="fw-normal">/day</small></span>
+              </div>
+              <a href="profile.html" class="btn btn-sm btn-brand">View Profile & Hire</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Worker 4: Manjunath Gowda -->
+        <div class="col-md-6 col-lg-6">
+          <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 52px; height: 52px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.25rem; border: 2px solid var(--brand-primary);">
+                    M
+                  </div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2">
+                      <h5 class="fw-bold mb-0" style="color: var(--text-main);">Manjunath Gowda</h5>
+                      <i class="bi bi-patch-check-fill text-primary"></i>
+                    </div>
+                    <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Koramangala, Bengaluru</small>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <span class="badge-chip badge-chip-brand mb-1"><i class="bi bi-trophy-fill text-warning"></i> Rank #4</span>
+                  <div class="star-rating small"><i class="bi bi-star-fill"></i> 4.89 <span class="text-muted fw-normal">(28 reviews)</span></div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-1 mb-3">
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Plumbing</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">CPVC Piping</span>
+                <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Tank Cleaning</span>
+              </div>
+
+              <div class="row g-2 mb-3 p-2 rounded-3 text-center small" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">RELIABILITY</span>
+                  <strong class="text-success fs-6">97%</strong>
+                </div>
+                <div class="col-4 border-end border-subtle">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">ATTENDANCE</span>
+                  <strong class="text-primary fs-6">99%</strong>
+                </div>
+                <div class="col-4">
+                  <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">JOBS DONE</span>
+                  <strong class="fs-6" style="color: var(--text-main);">54 jobs</strong>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between small text-muted mb-2">
+                <span><i class="bi bi-translate me-1"></i>Kannada, Tamil, Telugu</span>
+                <span><i class="bi bi-briefcase me-1"></i>7.0 yrs exp</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div>
+                <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">EXPECTED WAGE</small>
+                <span class="wage-pill p-1 px-2 fs-6">₹900<small class="fw-normal">/day</small></span>
+              </div>
+              <a href="profile.html" class="btn btn-sm btn-brand">View Profile & Hire</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Floating '+' Button for Quick Job Posting (PRD Requirement) -->
+  <a href="post-job.html" class="fab-post-job shadow-lg" title="Post a New Job">
+    <i class="bi bi-plus-lg"></i>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/theme.js"></script>
+</body>
+</html>
