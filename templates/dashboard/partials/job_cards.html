@@ -1,0 +1,86 @@
+{% for job in jobs %}
+  <div class="col-md-6 col-lg-6 mb-3">
+    <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between position-relative">
+      <div>
+        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+          <span class="badge-chip badge-chip-brand">
+            <i class="bi bi-tag-fill me-1"></i>{{ job.get_category_display }}
+          </span>
+          <span class="wage-pill">
+            ₹{{ job.pay_offered|floatformat:0 }}<small class="fs-6 fw-normal">/day</small>
+          </span>
+        </div>
+
+        <h5 class="fw-bold mb-1" style="color: var(--text-main);">{{ job.title }}</h5>
+        
+        <p class="text-muted small mb-3" style="line-height: 1.45;">
+          {{ job.description|truncatewords:24 }}
+        </p>
+
+        <!-- Skill & Timing Chips -->
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">
+            <i class="bi bi-wrench me-1"></i>{{ job.required_skill }}
+          </span>
+          <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">
+            <i class="bi bi-clock me-1"></i>{{ job.duration }}
+          </span>
+          <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">
+            <i class="bi bi-calendar3 me-1"></i>Start: {{ job.start_date|date:"M d, Y" }}
+          </span>
+        </div>
+
+        <!-- Locality & Distance -->
+        <div class="d-flex align-items-center gap-3 text-muted small mb-3">
+          <div>
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+            <span class="fw-semibold">{{ job.location }}</span>
+          </div>
+          <div>
+            <i class="bi bi-pin-map text-primary me-1"></i>
+            <span>~{{ job.estimated_distance_km }} km away</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer: Contractor info & Action -->
+      <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+        <div class="d-flex align-items-center gap-2">
+          <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; background: var(--border-subtle); color: var(--text-main); font-size: 0.75rem;">
+            {{ job.contractor.first_name|default:job.contractor.username|slice:":1"|upper }}
+          </div>
+          <div>
+            <div class="small fw-semibold lh-1" style="color: var(--text-main);">
+              {{ job.contractor.contractor_profile.company_name|default:job.contractor.first_name|default:job.contractor.username }}
+            </div>
+            <div class="star-rating small">
+              <i class="bi bi-star-fill"></i> {{ job.contractor.contractor_profile.rating|default:"4.90" }}
+              <span class="text-muted fw-normal">({{ job.contractor.contractor_profile.total_ratings_count|default:"14" }})</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          {% if job.id in applied_job_ids %}
+            <span class="badge-chip badge-chip-success">
+              <i class="bi bi-check-circle-fill"></i> Applied
+            </span>
+          {% else %}
+            <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-brand">
+              Apply Now <i class="bi bi-arrow-right"></i>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% empty %}
+  <div class="col-12 text-center py-5">
+    <div class="p-4 rounded-4" style="background: var(--bg-surface); border: 1px dashed var(--border-subtle);">
+      <i class="bi bi-search fs-1 text-muted mb-2 d-block"></i>
+      <h5 class="fw-bold" style="color: var(--text-main);">No matching daily jobs found</h5>
+      <p class="text-muted small mb-3">Try adjusting your skill filter, search keyword, or wage preferences.</p>
+      <a href="{% url 'worker_dashboard' %}" class="btn btn-sm btn-brand-outline">Reset All Filters</a>
+    </div>
+  </div>
+{% endfor %}

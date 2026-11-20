@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-panel p-4 p-md-5">
+
+        <h3 class="fw-bold mb-4" style="color: var(--text-main);">
+          <i class="bi bi-person-gear me-2" style="color: var(--brand-primary);"></i> Edit Profile Details
+        </h3>
+
+        <form method="POST" action="{% url 'profile_edit' %}">
+          {% csrf_token %}
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Full Name</label>
+              <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Contact Phone Number</label>
+              <input type="text" name="phone_number" class="form-control" value="{{ user.phone_number }}" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Locality / Area</label>
+            <input type="text" name="locality" class="form-control" value="{{ user.locality }}" placeholder="e.g. Indiranagar, Bengaluru" required>
+          </div>
+
+          {% if user.is_worker and worker_profile %}
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Expected Daily Wage (₹)</label>
+                <input type="number" step="10" name="expected_daily_wage" class="form-control" value="{{ worker_profile.expected_daily_wage|floatformat:0 }}" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Availability Status</label>
+                <select name="availability_status" class="form-select">
+                  <option value="AVAILABLE" {% if worker_profile.availability_status == 'AVAILABLE' %}selected{% endif %}>Available for Work Today</option>
+                  <option value="BUSY" {% if worker_profile.availability_status == 'BUSY' %}selected{% endif %}>Currently on Assignment</option>
+                  <option value="UNAVAILABLE" {% if worker_profile.availability_status == 'UNAVAILABLE' %}selected{% endif %}>Unavailable</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Skills (Comma-separated)</label>
+              <input type="text" name="skills" class="form-control" value="{{ worker_profile.skills }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Languages Known</label>
+              <input type="text" name="languages_known" class="form-control" value="{{ worker_profile.languages_known }}">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold small">Personal Bio & Work Highlights</label>
+              <textarea name="bio" rows="3" class="form-control">{{ worker_profile.bio }}</textarea>
+            </div>
+
+          {% elif user.is_contractor and contractor_profile %}
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Company or Business Name</label>
+                <input type="text" name="company_name" class="form-control" value="{{ contractor_profile.company_name }}">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Business Type</label>
+                <input type="text" name="business_type" class="form-control" value="{{ contractor_profile.business_type }}">
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold small">Office or Site Address</label>
+              <textarea name="address" rows="2" class="form-control">{{ contractor_profile.address }}</textarea>
+            </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-end gap-3 pt-3 border-top border-subtle">
+            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-brand px-4">Save Changes</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

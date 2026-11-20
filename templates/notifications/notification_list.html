@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notifications - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="fw-bold mb-1" style="color: var(--text-main);">Notifications Feed</h2>
+          <p class="text-muted small mb-0">Updates on your applications, hiring confirmations, and wage credits.</p>
+        </div>
+      </div>
+
+      <div class="app-card overflow-hidden">
+        <div class="list-group list-group-flush">
+          {% for notif in notifications %}
+            <div class="list-group-item p-3 border-bottom border-subtle d-flex align-items-start gap-3" style="background-color: var(--bg-surface);">
+              <div class="rounded-circle p-2 d-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px; background: {% if notif.notification_type == 'JOB_ACCEPTED' or notif.notification_type == 'PAYMENT_CREDITED' %}var(--brand-gradient){% elif notif.notification_type == 'REVIEW_RECEIVED' %}linear-gradient(135deg, #f59e0b, #d97706){% else %}linear-gradient(135deg, #0284c7, #0369a1){% endif %};">
+                <i class="bi {% if notif.notification_type == 'JOB_ACCEPTED' %}bi-check-circle-fill{% elif notif.notification_type == 'PAYMENT_CREDITED' %}bi-cash-coin{% elif notif.notification_type == 'REVIEW_RECEIVED' %}bi-star-fill{% elif notif.notification_type == 'CHAT_MESSAGE' %}bi-chat-dots-fill{% else %}bi-bell-fill{% endif %}"></i>
+              </div>
+
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h6 class="fw-bold mb-0" style="color: var(--text-main);">{{ notif.title }}</h6>
+                  <small class="text-muted" style="font-size: 0.70rem;">{{ notif.created_at|timesince }} ago</small>
+                </div>
+                <p class="text-muted small mb-2">{{ notif.message }}</p>
+                
+                {% if notif.link %}
+                  <a href="{% url 'mark_notification_read' notif.id %}" class="btn btn-sm btn-brand-outline py-1 px-3" style="font-size: 0.80rem;">
+                    View Details <i class="bi bi-arrow-right"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-center py-5 text-muted">
+              <i class="bi bi-bell-slash fs-1 d-block mb-3"></i>
+              <h5 class="fw-bold" style="color: var(--text-main);">No notifications right now</h5>
+              <p class="small mb-0">You will be notified whenever employers respond, hire you, or transfer wages.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

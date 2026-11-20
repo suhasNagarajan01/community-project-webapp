@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Posted Jobs - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1" style="color: var(--text-main);">My Posted Daily Jobs</h2>
+      <p class="text-muted small mb-0">Track worker applicants, hire candidates, and sign-off on completed tasks.</p>
+    </div>
+    <a href="{% url 'post_job' %}" class="btn btn-brand d-inline-flex align-items-center gap-2">
+      <i class="bi bi-plus-lg"></i> Post New Job
+    </a>
+  </div>
+
+  <div class="row g-3">
+    {% for job in jobs %}
+      <div class="col-md-6 col-lg-6">
+        <div class="app-card p-4 h-100 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+              <span class="badge-chip badge-chip-brand">{{ job.get_category_display }}</span>
+              <span class="badge {% if job.status == 'OPEN' %}bg-success-subtle text-success{% elif job.status == 'IN_PROGRESS' %}bg-primary-subtle text-primary{% else %}bg-secondary-subtle text-muted{% endif %} rounded-pill px-2 py-1 small">
+                {{ job.get_status_display }}
+              </span>
+            </div>
+
+            <h5 class="fw-bold mb-1" style="color: var(--text-main);">{{ job.title }}</h5>
+            
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="wage-pill p-1 px-2 fs-6">₹{{ job.pay_offered|floatformat:0 }}/day</span>
+              <span class="small text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ job.location }}</span>
+            </div>
+
+            <div class="p-2 rounded-2 mb-3 d-flex justify-content-around text-center small" style="background: var(--bg-canvas);">
+              <div>
+                <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">REQUIRED</span>
+                <strong>{{ job.workers_required }}</strong>
+              </div>
+              <div class="border-start border-end border-subtle px-3">
+                <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">HIRED</span>
+                <strong class="text-success">{{ job.workers_hired }}</strong>
+              </div>
+              <div>
+                <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">APPLICANTS</span>
+                <strong style="color: var(--brand-primary);">{{ job.applications.count }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+            <span class="text-muted small">Posted {{ job.created_at|date:"M d, Y" }}</span>
+            <div class="d-flex gap-2">
+              <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-outline-secondary">Details</a>
+              <a href="{% url 'contractor_job_applicants' job.id %}" class="btn btn-sm btn-brand position-relative">
+                <i class="bi bi-people-fill me-1"></i> Review Applicants ({{ job.applications.count }})
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center py-5">
+        <div class="p-5 rounded-4" style="background: var(--bg-surface); border: 1px dashed var(--border-subtle);">
+          <i class="bi bi-briefcase fs-1 text-muted mb-3 d-block"></i>
+          <h4 class="fw-bold" style="color: var(--text-main);">No Jobs Posted Yet</h4>
+          <p class="text-muted small mb-3">Create your first daily wage job to start receiving applications from top-rated local workers.</p>
+          <a href="{% url 'post_job' %}" class="btn btn-brand">Post Your First Job</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

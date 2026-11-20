@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - RojgarSetu Daily Wage Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+      <div class="glass-panel p-4 p-md-5">
+
+        <div class="text-center mb-4">
+          <div class="rounded-circle d-inline-flex p-3 mb-2" style="background: var(--brand-primary-light); color: var(--brand-primary);">
+            <i class="bi bi-person-lock fs-2"></i>
+          </div>
+          <h3 class="fw-bold mb-1" style="color: var(--text-main);">Welcome Back</h3>
+          <p class="text-muted small">Select your role to access your dedicated workspace</p>
+        </div>
+
+        <!-- Role Toggle Pills -->
+        <ul class="nav nav-pills nav-fill mb-4 p-1 rounded-pill" style="background-color: var(--border-subtle);" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab == 'WORKER' %}active{% endif %}" id="worker-tab" data-bs-toggle="pill" data-bs-target="#worker-pane" type="button" role="tab" style="{% if role_tab == 'WORKER' %}background: var(--brand-gradient); color: #fff;{% endif %}">
+              <i class="bi bi-person-badge me-1"></i> Worker Login
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab == 'CONTRACTOR' %}active{% endif %}" id="contractor-tab" data-bs-toggle="pill" data-bs-target="#contractor-pane" type="button" role="tab" style="{% if role_tab == 'CONTRACTOR' %}background: var(--brand-gradient); color: #fff;{% endif %}">
+              <i class="bi bi-building me-1"></i> Contractor Login
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Worker Login Tab -->
+          <div class="tab-pane fade {% if role_tab == 'WORKER' %}show active{% endif %}" id="worker-pane" role="tabpanel">
+            <form method="POST" action="{% url 'login' %}">
+              {% csrf_token %}
+              <input type="hidden" name="role_tab" value="WORKER">
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold small" style="color: var(--text-main);">Username or Phone</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-person text-muted"></i></span>
+                  <input type="text" name="username" class="form-control border-start-0 border-subtle" placeholder="e.g. ramesh_kumar" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold small" style="color: var(--text-main);">Password</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-key text-muted"></i></span>
+                  <input type="password" name="password" class="form-control border-start-0 border-subtle" placeholder="••••••••" required>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold mb-3">
+                Log In as Worker
+              </button>
+            </form>
+
+            <!-- 1-Click Worker Demo Access -->
+            <form method="POST" action="{% url 'login' %}" class="mt-3">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="demo_worker">
+              <button type="submit" class="btn btn-sm btn-outline-success w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-lightning-charge-fill"></i> Quick Demo Login: Ramesh Kumar (Electrician)
+              </button>
+            </form>
+          </div>
+
+          <!-- Contractor Login Tab -->
+          <div class="tab-pane fade {% if role_tab == 'CONTRACTOR' %}show active{% endif %}" id="contractor-pane" role="tabpanel">
+            <form method="POST" action="{% url 'login' %}">
+              {% csrf_token %}
+              <input type="hidden" name="role_tab" value="CONTRACTOR">
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold small" style="color: var(--text-main);">Company / Contractor Username</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-building text-muted"></i></span>
+                  <input type="text" name="username" class="form-control border-start-0 border-subtle" placeholder="e.g. buildwell_infra" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold small" style="color: var(--text-main);">Password</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-key text-muted"></i></span>
+                  <input type="password" name="password" class="form-control border-start-0 border-subtle" placeholder="••••••••" required>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold mb-3">
+                Log In as Contractor
+              </button>
+            </form>
+
+            <!-- 1-Click Contractor Demo Access -->
+            <form method="POST" action="{% url 'login' %}" class="mt-3">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="demo_contractor">
+              <button type="submit" class="btn btn-sm btn-outline-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-lightning-charge-fill"></i> Quick Demo Login: Rajesh Sharma (Contractor)
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="text-center pt-4 border-top border-subtle mt-4">
+          <p class="text-muted small mb-0">
+            Don't have an account yet? 
+            <a href="{% url 'register' %}" class="fw-bold" style="color: var(--brand-primary);">Register Now</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

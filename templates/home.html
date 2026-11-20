@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}RojgarSetu - Local Daily Wage Worker & Contractor Marketplace{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-md-5">
+
+  <!-- Hero Section -->
+  <div class="row align-items-center mb-5 g-4">
+    <div class="col-lg-7 text-center text-lg-start">
+      <div class="badge-chip badge-chip-brand mb-3">
+        <i class="bi bi-shield-check"></i> 100% Verified Community Marketplace
+      </div>
+      <h1 class="display-4 fw-extrabold mb-3 lh-sm" style="color: var(--text-main);">
+        Connecting Daily Wage Workers & Contractors, <span style="background: var(--brand-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Directly.</span>
+      </h1>
+      <p class="lead text-muted mb-4" style="max-width: 600px;">
+        Eliminating middleman gaps. Daily workers find consistent nearby assignments with transparent daily wages. Contractors find reliable, rated skilled labor on short notice.
+      </p>
+
+      <!-- Dual Role Selection Callout -->
+      <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start mb-4">
+        <a href="{% url 'login' %}?role=WORKER" class="btn btn-brand px-4 py-3 d-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-person-badge fs-5"></i>
+          <div class="text-start">
+            <span class="d-block small lh-1 opacity-75">Looking for Daily Work?</span>
+            <span class="fs-6 fw-bold">Worker Portal</span>
+          </div>
+        </a>
+
+        <a href="{% url 'login' %}?role=CONTRACTOR" class="btn btn-brand-outline px-4 py-3 d-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-building fs-5"></i>
+          <div class="text-start">
+            <span class="d-block small lh-1 text-muted">Need Skilled Labor?</span>
+            <span class="fs-6 fw-bold">Contractor Portal</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Quick Platform Assurance -->
+      <div class="d-flex align-items-center gap-4 text-muted small justify-content-center justify-content-lg-start">
+        <div class="d-flex align-items-center gap-1">
+          <i class="bi bi-check-circle-fill text-success"></i> No Commission Cuts
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <i class="bi bi-check-circle-fill text-success"></i> Direct Phone & Chat
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <i class="bi bi-check-circle-fill text-success"></i> Daily Wage Tracking
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Stats & Trust Showcase -->
+    <div class="col-lg-5">
+      <div class="glass-panel p-4 p-md-5">
+        <h4 class="fw-bold mb-4" style="color: var(--text-main);">
+          <i class="bi bi-graph-up-arrow me-2" style="color: var(--brand-primary);"></i>
+          Today's Market Pulse
+        </h4>
+
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="app-card p-3 text-center">
+              <span class="display-6 fw-bold text-success d-block">{{ stats.active_jobs }}+</span>
+              <small class="text-muted fw-semibold">Open Jobs Today</small>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="app-card p-3 text-center">
+              <span class="display-6 fw-bold d-block" style="color: var(--brand-primary);">{{ stats.verified_workers }}+</span>
+              <small class="text-muted fw-semibold">Verified Workers</small>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="app-card p-3 text-center">
+              <span class="display-6 fw-bold text-warning d-block">{{ stats.contractors }}+</span>
+              <small class="text-muted fw-semibold">Registered Contractors</small>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="app-card p-3 text-center">
+              <span class="display-6 fw-bold d-block" style="color: var(--text-main);">{{ stats.avg_wage }}</span>
+              <small class="text-muted fw-semibold">Avg. Daily Wage</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 rounded-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-lightning-charge-fill text-warning"></i>
+            <span class="fw-bold small" style="color: var(--text-main);">Fastest Hiring Window</span>
+          </div>
+          <small class="text-muted">Average time to hire a verified worker in your locality is under <strong>28 minutes</strong>.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role Selection Deep Dive Cards -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-6">
+      <div class="app-card p-4 h-100 position-relative">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="rounded-3 p-3 text-white" style="background: var(--brand-gradient);">
+            <i class="bi bi-person-badge fs-3"></i>
+          </div>
+          <div>
+            <span class="badge-chip badge-chip-brand mb-1">FOR WORKERS</span>
+            <h3 class="fw-bold mb-0" style="color: var(--text-main);">Find Daily Jobs & Track Wages</h3>
+          </div>
+        </div>
+        <ul class="list-unstyled text-muted mb-4 space-y-2">
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Nearby Opportunities:</strong> Filter jobs by locality, skill, and distance.</li>
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Upfront Wages:</strong> Know exactly how much you earn before applying.</li>
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Digital Wallet:</strong> Track daily earnings, pending clearances, and withdraw directly via UPI.</li>
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Reputation Building:</strong> Gain punctuality and quality ratings to attract high-paying jobs.</li>
+        </ul>
+        <div class="d-flex gap-2">
+          <a href="{% url 'register' %}?role=WORKER" class="btn btn-brand flex-grow-1">Join as a Worker</a>
+          <a href="{% url 'login' %}?role=WORKER" class="btn btn-brand-outline">Worker Login</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="app-card p-4 h-100 position-relative">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="rounded-3 p-3 text-white" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+            <i class="bi bi-building fs-3"></i>
+          </div>
+          <div>
+            <span class="badge-chip badge-chip-success mb-1">FOR CONTRACTORS</span>
+            <h3 class="fw-bold mb-0" style="color: var(--text-main);">Hire Reliable Skilled Workers</h3>
+          </div>
+        </div>
+        <ul class="list-unstyled text-muted mb-4 space-y-2">
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Worker Rankings:</strong> Review workers ranked by attendance, reliability, and reviews.</li>
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Quick Job Posting:</strong> Post temporary assignments in under 60 seconds.</li>
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Direct Communication:</strong> Call or chat directly with candidates.</li>
+          <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Two-Way Trust:</strong> Rate workers on punctuality and quality after completion.</li>
+        </ul>
+        <div class="d-flex gap-2">
+          <a href="{% url 'register' %}?role=CONTRACTOR" class="btn btn-brand flex-grow-1">Join as Contractor</a>
+          <a href="{% url 'login' %}?role=CONTRACTOR" class="btn btn-brand-outline">Contractor Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Open Daily Wage Jobs -->
+  <div class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div>
+        <h3 class="fw-bold mb-1" style="color: var(--text-main);">Recently Posted Daily Jobs</h3>
+        <p class="text-muted mb-0 small">Live openings in Bengaluru and surrounding localities</p>
+      </div>
+      <a href="{% url 'login' %}?role=WORKER" class="btn btn-sm btn-brand-outline">
+        View All Jobs <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="row g-3">
+      {% for job in recent_jobs %}
+        <div class="col-md-6 col-lg-4">
+          <div class="app-card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge-chip badge-chip-brand">{{ job.get_category_display }}</span>
+                <span class="wage-pill">₹{{ job.pay_offered|floatformat:0 }}/day</span>
+              </div>
+              <h5 class="fw-bold mb-1" style="color: var(--text-main);">{{ job.title }}</h5>
+              <p class="text-muted small mb-2 text-truncate-2">{{ job.description }}</p>
+              
+              <div class="small text-muted mb-2">
+                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ job.location }} ({{ job.estimated_distance_km }} km)</div>
+                <div><i class="bi bi-clock me-1"></i>{{ job.duration }}</div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+              <div class="small text-muted">
+                <span class="star-rating"><i class="bi bi-star-fill"></i> {{ job.contractor.contractor_profile.rating|default:"4.9" }}</span>
+                <span>({{ job.workers_required }} needed)</span>
+              </div>
+              <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-brand">View Details</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-4 text-muted">
+          <p>No open jobs posted yet. Log in as a contractor to post one!</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

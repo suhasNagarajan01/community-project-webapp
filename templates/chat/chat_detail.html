@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat with {{ other_user.get_full_name|default:other_user.username }} - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <!-- Chat Container Card -->
+      <div class="glass-panel d-flex flex-column" style="height: 75vh; max-height: 800px; overflow: hidden;">
+        
+        <!-- Chat Header -->
+        <div class="p-3 border-bottom border-subtle d-flex align-items-center justify-content-between" style="background: var(--bg-surface);">
+          <div class="d-flex align-items-center gap-3">
+            <a href="{% url 'chat_list' %}" class="btn btn-sm btn-outline-secondary border-0 p-1">
+              <i class="bi bi-arrow-left fs-5"></i>
+            </a>
+            
+            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 42px; height: 42px; background: var(--brand-primary-light); color: var(--brand-primary); border: 2px solid var(--brand-primary);">
+              {{ other_user.first_name|default:other_user.username|slice:":1"|upper }}
+            </div>
+
+            <div>
+              <h6 class="fw-bold mb-0" style="color: var(--text-main);">
+                {{ other_user.get_full_name|default:other_user.username }}
+              </h6>
+              <small class="text-muted" style="font-size: 0.75rem;">
+                {{ other_user.get_role_display }} • {{ other_user.locality|default:other_user.city }}
+              </small>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            {% if conversation.job %}
+              <a href="{% url 'job_detail' conversation.job.id %}" class="btn btn-sm btn-outline-secondary d-none d-sm-inline-flex" title="View Job Details">
+                <i class="bi bi-briefcase me-1"></i> Job Details
+              </a>
+            {% endif %}
+            <a href="tel:{{ other_user.phone_number }}" class="btn btn-sm btn-brand-outline" title="Call User">
+              <i class="bi bi-telephone-fill"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Chat Messages Area with HTMX live polling every 5s -->
+        <div class="flex-grow-1 p-3 overflow-y-auto" id="chat-messages-container"
+             hx-get="{% url 'chat_detail' conversation.id %}?poll=true"
+             hx-trigger="every 5s"
+             hx-target="#chat-messages-container"
+             hx-swap="innerHTML"
+             style="background: var(--bg-canvas);">
+          {% include 'chat/partials/message_stream.html' %}
+        </div>
+
+        <!-- Message Input Box with HTMX Submission -->
+        <div class="p-3 border-top border-subtle" style="background: var(--bg-surface);">
+          <form method="POST" action="{% url 'chat_detail' conversation.id %}" 
+                hx-post="{% url 'chat_detail' conversation.id %}"
+                hx-target="#chat-messages-container"
+                hx-swap="beforeend"
+                hx-on::after-request="this.reset(); document.getElementById('chat-messages-container').scrollTop = document.getElementById('chat-messages-container').scrollHeight;">
+            {% csrf_token %}
+            <div class="input-group">
+              <input type="text" 
+                     name="message" 
+                     class="form-control border-subtle" 
+                     placeholder="Type your message (e.g. Can you confirm the site location and timing?)..." 
+                     autocomplete="off" 
+                     required>
+              <button class="btn btn-brand px-4" type="submit">
+                <i class="bi bi-send-fill me-1"></i> Send
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Auto-scroll chat container to bottom on initial load
+  window.addEventListener('DOMContentLoaded', () => {
+    const scroller = document.getElementById('chat-messages-container');
+    if (scroller) {
+      scroller.scrollTop = scroller.scrollHeight;
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+<div class="d-flex mb-3 {% if message.sender == user %}justify-content-end{% else %}justify-content-start{% endif %}">
+  <div class="p-3 rounded-4 shadow-sm" style="max-width: 75%; {% if message.sender == user %}background: var(--brand-gradient); color: #ffffff; border-bottom-right-radius: 4px;{% else %}background-color: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-subtle); border-bottom-left-radius: 4px;{% endif %}">
+    <div class="small mb-1 fw-bold opacity-75" style="font-size: 0.70rem;">
+      {{ message.sender.first_name|default:message.sender.username }}
+    </div>
+    <div style="line-height: 1.45;">{{ message.message }}</div>
+    <div class="text-end mt-1 opacity-75" style="font-size: 0.65rem;">
+      {{ message.timestamp|date:"h:i A" }}
+    </div>
+  </div>
+</div>

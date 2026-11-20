@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Post a Daily Wage Job - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-panel p-4 p-md-5">
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="rounded-3 p-3 text-white" style="background: var(--brand-gradient);">
+            <i class="bi bi-briefcase-fill fs-3"></i>
+          </div>
+          <div>
+            <h2 class="fw-bold mb-0" style="color: var(--text-main);">Post a Daily Wage Job</h2>
+            <p class="text-muted small mb-0">Fill in the details to immediately broadcast this assignment to verified workers nearby.</p>
+          </div>
+        </div>
+
+        <form method="POST" action="{% url 'post_job' %}">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Job Title *</label>
+            {{ form.title }}
+            <div class="form-text small">e.g. Need 2 Electricians for Office Wiring, Urgent 1-Day Masonry Repair</div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Work Category *</label>
+              {{ form.category }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Key Skill Required *</label>
+              {{ form.required_skill }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Scope & Job Description *</label>
+            {{ form.description }}
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Daily Wage Pay Offered (₹) *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-subtle">₹</span>
+                {{ form.pay_offered }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Pay Structure *</label>
+              {{ form.pay_type }}
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Site Address / Locality *</label>
+              {{ form.location }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">City *</label>
+              {{ form.city }}
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Number of Workers Required *</label>
+              {{ form.workers_required }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Working Hours / Duration *</label>
+              {{ form.duration }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Start Date *</label>
+              {{ form.start_date }}
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Contact Phone Number *</label>
+              {{ form.contact_phone }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Site Contact Person</label>
+              {{ form.contact_person }}
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-3 pt-3 border-top border-subtle">
+            <a href="{% url 'contractor_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-brand px-4 py-2">
+              <i class="bi bi-broadcast me-1"></i> Broadcast Job Posting
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

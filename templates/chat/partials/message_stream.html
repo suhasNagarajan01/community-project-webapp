@@ -1,0 +1,8 @@
+{% for message in messages %}
+  {% include 'chat/partials/single_message.html' with message=message user=user %}
+{% empty %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-chat-dots fs-1 d-block mb-2"></i>
+    <p class="small mb-0">No messages yet. Send a greeting to start coordinating on the assignment!</p>
+  </div>
+{% endfor %}

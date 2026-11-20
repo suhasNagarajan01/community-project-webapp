@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="glass-panel p-4 p-md-5">
+
+        <div class="text-center mb-4">
+          <div class="rounded-circle d-inline-flex p-3 mb-2" style="background: var(--brand-primary-light); color: var(--brand-primary);">
+            <i class="bi bi-headset fs-2"></i>
+          </div>
+          <h2 class="fw-bold mb-1" style="color: var(--text-main);">Community Support & Help</h2>
+          <p class="text-muted small">Need assistance with your account, job disputes, or local help? We're here for you.</p>
+        </div>
+
+        <form method="POST" action="{% url 'contact' %}">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Your Name *</label>
+            <input type="text" name="name" class="form-control" value="{{ user.get_full_name|default:user.username }}" required>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold small">Contact Mobile Number *</label>
+              <input type="text" name="phone" class="form-control" value="{{ user.phone_number }}" placeholder="e.g. 9876543210" required>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold small">Topic / Concern *</label>
+              <select name="topic" class="form-select">
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Worker Registration Assistance">Worker Registration Assistance</option>
+                <option value="Contractor Verification">Contractor Verification</option>
+                <option value="Wage or Payment Settlement">Wage or Payment Settlement</option>
+                <option value="Safety or Behavior Dispute">Safety or Behavior Dispute</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold small">Message or Description *</label>
+            <textarea name="message" rows="4" class="form-control" placeholder="Explain your inquiry or issue with as much detail as possible..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold">
+            <i class="bi bi-send-fill me-1"></i> Send Support Request
+          </button>
+        </form>
+
+        <div class="row g-3 text-center pt-4 border-top border-subtle mt-4">
+          <div class="col-6">
+            <small class="text-muted d-block">HELPLINE (TOLL-FREE)</small>
+            <strong style="color: var(--brand-primary);">1800-425-WORK</strong>
+          </div>
+          <div class="col-6">
+            <small class="text-muted d-block">SUPPORT EMAIL</small>
+            <strong style="color: var(--text-main);">support@rojgarsetu.in</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

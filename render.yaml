@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: daily-wage-platform
+    env: python
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py seed_data"
+    startCommand: "gunicorn project.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,localhost,127.0.0.1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: daily-wage-db
+          property: connectionString
+
+databases:
+  - name: daily-wage-db
+    databaseName: dailywagedb
+    user: dailywageuser
+    plan: free
