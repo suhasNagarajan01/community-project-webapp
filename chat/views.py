@@ -11,9 +11,12 @@ from notifications.models import Notification
 def chat_list_view(request):
     """Lists all active chat conversations for the logged in user."""
     user = request.user
-    conversations = Conversation.objects.filter(
+    conversations = list(Conversation.objects.filter(
         Q(contractor=user) | Q(worker=user)
-    ).select_related('contractor', 'worker', 'job').order_by('-updated_at')
+    ).select_related('contractor', 'worker', 'job').order_by('-updated_at'))
+
+    for conv in conversations:
+        conv.other_person = conv.get_other_user(user)
 
     return render(request, 'chat/chat_list.html', {
         'conversations': conversations

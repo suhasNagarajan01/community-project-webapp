@@ -52,40 +52,38 @@
       <div class="app-card overflow-hidden">
         <div class="list-group list-group-flush">
           {% for conv in conversations %}
-            {% with other_person=conv.worker if user == conv.contractor else conv.contractor %}
-              <a href="{% url 'chat_detail' conv.id %}" class="list-group-item list-group-item-action p-3 d-flex align-items-center gap-3 border-bottom border-subtle" style="background-color: var(--bg-surface);">
-                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 48px; height: 48px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.15rem; border: 2px solid var(--brand-primary);">
-                  {{ other_person.first_name|default:other_person.username|slice:":1"|upper }}
+            <a href="{% url 'chat_detail' conv.id %}" class="list-group-item list-group-item-action p-3 d-flex align-items-center gap-3 border-bottom border-subtle" style="background-color: var(--bg-surface);">
+              <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 48px; height: 48px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.15rem; border: 2px solid var(--brand-primary);">
+                {{ conv.other_person.first_name|default:conv.other_person.username|slice:":1"|upper }}
+              </div>
+              
+              <div class="flex-grow-1 min-w-0">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h6 class="fw-bold mb-0 text-truncate" style="color: var(--text-main);">
+                    {{ conv.other_person.get_full_name|default:conv.other_person.username }}
+                  </h6>
+                  <small class="text-muted" style="font-size: 0.70rem;">{{ conv.updated_at|timesince }} ago</small>
                 </div>
                 
-                <div class="flex-grow-1 min-w-0">
-                  <div class="d-flex justify-content-between align-items-center mb-1">
-                    <h6 class="fw-bold mb-0 text-truncate" style="color: var(--text-main);">
-                      {{ other_person.get_full_name|default:other_person.username }}
-                    </h6>
-                    <small class="text-muted" style="font-size: 0.70rem;">{{ conv.updated_at|timesince }} ago</small>
-                  </div>
-                  
-                  {% if conv.job %}
-                    <span class="badge bg-secondary-subtle text-secondary small py-0 px-2 rounded-pill mb-1">
-                      {{ conv.job.title|truncatechars:30 }}
-                    </span>
-                  {% endif %}
+                {% if conv.job %}
+                  <span class="badge bg-secondary-subtle text-secondary small py-0 px-2 rounded-pill mb-1">
+                    {{ conv.job.title|truncatechars:30 }}
+                  </span>
+                {% endif %}
 
-                  <p class="text-muted small mb-0 text-truncate">
-                    {% with last_msg=conv.messages.last %}
-                      {% if last_msg %}
-                        {{ last_msg.sender.first_name|default:last_msg.sender.username }}: {{ last_msg.message }}
-                      {% else %}
-                        Start a conversation...
-                      {% endif %}
-                    {% endwith %}
-                  </p>
-                </div>
+                <p class="text-muted small mb-0 text-truncate">
+                  {% with last_msg=conv.messages.last %}
+                    {% if last_msg %}
+                      {{ last_msg.sender.first_name|default:last_msg.sender.username }}: {{ last_msg.message }}
+                    {% else %}
+                      Start a conversation...
+                    {% endif %}
+                  {% endwith %}
+                </p>
+              </div>
 
-                <i class="bi bi-chevron-right text-muted"></i>
-              </a>
-            {% endwith %}
+              <i class="bi bi-chevron-right text-muted"></i>
+            </a>
           {% empty %}
             <div class="text-center py-5 text-muted">
               <i class="bi bi-chat-square-dots fs-1 d-block mb-3"></i>

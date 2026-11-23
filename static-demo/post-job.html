@@ -133,7 +133,7 @@
               <div class="row g-3 mb-3">
                 <div class="col-md-6">
                   <label class="form-label fw-semibold small">Site Address / Locality *</label>
-                  <input type="text" class="form-control" value="Indiranagar 100ft Road, Bengaluru" required>
+                  <input type="text" id="demo_site_location" class="form-control" value="Indiranagar 100ft Road, Bengaluru" required oninput="updateDemoLocationAnalysis()">
                 </div>
                 <div class="col-md-3">
                   <label class="form-label fw-semibold small">Workers Needed *</label>
@@ -142,6 +142,62 @@
                 <div class="col-md-3">
                   <label class="form-label fw-semibold small">Duration *</label>
                   <input type="text" class="form-control" value="2 Days" required>
+                </div>
+              </div>
+
+              <!-- Dynamic Proximity Radius & Match Timing Configuration -->
+              <div class="p-3 rounded-3 mb-3" style="background: var(--brand-gradient-subtle); border: 1.5px solid var(--border-subtle);">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="fw-bold small d-flex align-items-center gap-2" style="color: var(--brand-primary);">
+                    <i class="bi bi-radar"></i> Proximity Radius & Priority Match Timing
+                  </span>
+                  <span class="badge bg-success-subtle text-success small">
+                    <i class="bi bi-check-circle me-1"></i>Radius Matching Active
+                  </span>
+                </div>
+
+                <div class="row g-3 mb-2">
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Target Proximity Radius (N-km) *</label>
+                    <select class="form-select" id="demo_radius_select" onchange="updateDemoLocationAnalysis()">
+                      <option value="3">3 km Radius (Hyper-local)</option>
+                      <option value="5" selected>5 km Radius (Standard locality - Recommended)</option>
+                      <option value="8">8 km Radius (Extended neighborhood)</option>
+                      <option value="12">12 km Radius (Sub-city zone)</option>
+                      <option value="20">20 km Radius (Wider city area)</option>
+                    </select>
+                    <div class="form-text small">Sets the matching perimeter for instant priority worker alerts.</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Priority Alert Window (Match Timing) *</label>
+                    <select class="form-select" id="demo_timing_select">
+                      <option value="20">20 Minutes priority alert window</option>
+                      <option value="30" selected>30 Minutes priority alert window (Recommended)</option>
+                      <option value="45">45 Minutes priority alert window</option>
+                      <option value="60">60 Minutes priority alert window</option>
+                    </select>
+                    <div class="form-text small">Nearby workers receive early alerts before broad distribution.</div>
+                  </div>
+                </div>
+
+                <!-- Analysis Feedback Box -->
+                <div class="p-3 rounded-3 mt-2" style="background: var(--bg-surface); border: 1px dashed var(--brand-primary);">
+                  <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-geo-alt-fill fs-4" style="color: var(--brand-primary);"></i>
+                    <div class="flex-grow-1">
+                      <div class="fw-bold small" id="demo_analysis_title" style="color: var(--text-main);">
+                        Found 3 Verified Workers in Indiranagar (5 km)
+                      </div>
+                      <div class="small text-muted" id="demo_analysis_desc">
+                        Nearby workers receive alerts first for <strong>30 minutes</strong>. After this priority window, the application remains open and accessible platform-wide for all workers.
+                      </div>
+                    </div>
+                    <div class="text-end">
+                      <span class="badge bg-success fs-6 px-3 py-2 rounded-pill" id="demo_workers_pill">
+                        3 Workers Nearby
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -173,5 +229,23 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/theme.js"></script>
+  <script>
+    function updateDemoLocationAnalysis() {
+      const loc = document.getElementById('demo_site_location').value.trim() || 'Indiranagar';
+      const rad = document.getElementById('demo_radius_select').value;
+      const count = rad <= 3 ? 2 : (rad <= 5 ? 3 : (rad <= 8 ? 5 : 7));
+      const mins = rad <= 3 ? 20 : (rad <= 5 ? 30 : (rad <= 8 ? 45 : 60));
+
+      const title = document.getElementById('demo_analysis_title');
+      const desc = document.getElementById('demo_analysis_desc');
+      const pill = document.getElementById('demo_workers_pill');
+      const timingSelect = document.getElementById('demo_timing_select');
+
+      if (title) title.innerText = `Found ${count} Verified Workers near ${loc} (${rad} km)`;
+      if (desc) desc.innerHTML = `Nearby workers receive alerts first for <strong>${mins} minutes</strong>. After this priority window, the application remains open and accessible platform-wide for all workers.`;
+      if (pill) pill.innerText = `${count} Workers Nearby`;
+      if (timingSelect) timingSelect.value = mins;
+    }
+  </script>
 </body>
 </html>

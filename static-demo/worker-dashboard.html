@@ -188,9 +188,15 @@
       </div>
 
       <!-- Filter Controls Bar -->
-      <div class="d-flex justify-content-between align-items-center mb-3 px-1 small text-muted fw-semibold">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 px-1 small text-muted fw-semibold gap-2">
         <span>Available Openings (6 Jobs Nearby)</span>
-        <div class="d-flex gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <select class="form-select form-select-sm border-subtle rounded-pill py-1 px-3" style="width: auto; background-color: var(--bg-surface); color: var(--text-main);">
+            <option>Distance: All Openings</option>
+            <option selected>Within 3 km (Hyper-local)</option>
+            <option>Within 5 km</option>
+            <option>Within 8 km</option>
+          </select>
           <span class="badge-chip badge-chip-brand">Sort: Nearest First</span>
         </div>
       </div>
@@ -208,6 +214,16 @@
                 </span>
                 <span class="wage-pill">₹900<small class="fs-6 fw-normal">/day</small></span>
               </div>
+
+              <div class="mb-2 d-flex flex-wrap gap-1">
+                <span class="badge bg-warning text-dark fw-bold">
+                  <i class="bi bi-lightning-charge-fill me-1"></i>Nearby Priority Match (Within 5 km)
+                </span>
+                <span class="badge bg-danger-subtle text-danger fw-semibold">
+                  <i class="bi bi-stopwatch me-1"></i>Priority Window Active (30m)
+                </span>
+              </div>
+
               <h5 class="fw-bold mb-1" style="color: var(--text-main);">Urgent 2 Electricians for 3BHK Conduit Wiring</h5>
               <p class="text-muted small mb-3">Complete rewiring of 3BHK flat in Indiranagar. Need 2 qualified electricians with tools. Wall chasing already completed. High daily wage.</p>
               

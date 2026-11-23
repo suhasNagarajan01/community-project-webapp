@@ -235,3 +235,38 @@ class DailyWagePlatformTestCase(TestCase):
             title__icontains="Priority Job Alert"
         )
         self.assertGreaterEqual(priority_notifs.count(), 1)
+
+    def test_all_portal_views_and_routes(self):
+        """Comprehensive verification: checks that all platform routes render with 200 OK."""
+        # Public routes
+        for url_name in ['home', 'about', 'contact', 'login', 'register']:
+            res = self.client.get(reverse(url_name))
+            self.assertEqual(res.status_code, 200, f"Failed on public view: {url_name}")
+
+        # Worker authenticated routes
+        self.client.login(username='ramesh_kumar', password='worker123')
+        worker_urls = [
+            'worker_dashboard', 'worker_wallet', 'worker_applications',
+            'profile', 'profile_edit', 'settings', 'chat_list', 'notification_list'
+        ]
+        for url_name in worker_urls:
+            res = self.client.get(reverse(url_name))
+            self.assertEqual(res.status_code, 200, f"Failed on worker view: {url_name}")
+
+        # Job detail view
+        res = self.client.get(reverse('job_detail', args=[self.job.id]))
+        self.assertEqual(res.status_code, 200)
+
+        # Contractor authenticated routes
+        self.client.login(username='buildwell_infra', password='contractor123')
+        contractor_urls = ['contractor_dashboard', 'post_job', 'contractor_jobs']
+        for url_name in contractor_urls:
+            res = self.client.get(reverse(url_name))
+            self.assertEqual(res.status_code, 200, f"Failed on contractor view: {url_name}")
+
+        res = self.client.get(reverse('contractor_job_applicants', args=[self.job.id]))
+        self.assertEqual(res.status_code, 200)
+
+        # Review page
+        res = self.client.get(reverse('create_review', args=[self.job.id, self.worker_user.id]))
+        self.assertEqual(res.status_code, 200)

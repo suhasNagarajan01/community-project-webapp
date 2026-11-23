@@ -12,6 +12,11 @@ class Conversation(models.Model):
         unique_together = ('contractor', 'worker', 'job')
         ordering = ['-updated_at']
 
+    def get_other_user(self, current_user):
+        if current_user == self.contractor:
+            return self.worker
+        return self.contractor
+
     def __str__(self):
         return f"Chat: {self.contractor.username} & {self.worker.username}"
 
