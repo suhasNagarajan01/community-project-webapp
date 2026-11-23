@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - RojgarSetu Daily Wage Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="glass-panel p-4 p-md-5">
+
+        <div class="badge-chip badge-chip-brand mb-3">
+          <i class="bi bi-people-fill"></i> Community Project & Platform
+        </div>
+        
+        <h1 class="fw-bold mb-3" style="color: var(--text-main);">
+          Empowering Local Daily Wage Workers
+        </h1>
+
+        <p class="lead text-muted mb-4" style="line-height: 1.6;">
+          Unlike traditional white-collar job boards (LinkedIn, Naukri, or Indeed), <strong>RojgarSetu</strong> is engineered specifically for skilled and unskilled daily laborers, electricians, plumbers, masons, painters, housekeeping personnel, and security guards.
+        </p>
+
+        <div class="row g-4 my-4">
+          <div class="col-md-6">
+            <div class="app-card p-4 h-100">
+              <div class="rounded-circle d-inline-flex p-3 mb-3 text-white" style="background: var(--brand-gradient);">
+                <i class="bi bi-calendar2-check fs-4"></i>
+              </div>
+              <h5 class="fw-bold mb-2" style="color: var(--text-main);">Eliminating Income Gaps</h5>
+              <p class="text-muted small mb-0">Daily workers often lose 30-40% of their monthly income because word-of-mouth fails between contracts. Our platform provides real-time visibility into immediate nearby requirements.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="app-card p-4 h-100">
+              <div class="rounded-circle d-inline-flex p-3 mb-3 text-white" style="background: linear-gradient(135deg, #0284c7, #0369a1);">
+                <i class="bi bi-shield-check fs-4"></i>
+              </div>
+              <h5 class="fw-bold mb-2" style="color: var(--text-main);">Verified Ratings & Fair Wages</h5>
+              <p class="text-muted small mb-0">Workers build long-term reputation through verified attendance and punctuality scores. Contractors gain trust and hire with confidence in under 30 minutes.</p>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="fw-bold mb-3" style="color: var(--text-main);">Core Values</h4>
+        <ul class="list-unstyled text-muted space-y-2 mb-4">
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Zero Commissions:</strong> 100% of the wage agreed upon goes into the worker's hands.</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Local Proximity:</strong> Matching jobs within 2 to 10 km to minimize travel costs and exhaustion.</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Digital Financial Inclusion:</strong> Same-day direct UPI wallet payouts and verifiable earning statements.</li>
+        </ul>
+
+        <div class="p-4 rounded-3 text-center" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+          <h5 class="fw-bold mb-2" style="color: var(--text-main);">Ready to experience fair, frictionless daily hiring?</h5>
+          <div class="d-flex justify-content-center gap-3 mt-3">
+            <a href="{% url 'register' %}?role=WORKER" class="btn btn-brand">Join as Worker</a>
+            <a href="{% url 'register' %}?role=CONTRACTOR" class="btn btn-brand-outline">Join as Contractor</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Job Applications - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1" style="color: var(--text-main);">My Job Applications</h2>
+      <p class="text-muted small mb-0">Track applications, hiring status, and job completion verification.</p>
+    </div>
+    <a href="{% url 'worker_dashboard' %}" class="btn btn-sm btn-brand-outline">
+      <i class="bi bi-search me-1"></i> Browse More Jobs
+    </a>
+  </div>
+
+  <div class="row g-3">
+    {% for app in applications %}
+      <div class="col-md-6 col-lg-6">
+        <div class="app-card p-4 h-100 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+              <span class="badge-chip badge-chip-brand">{{ app.job.get_category_display }}</span>
+              <div>
+                {% if app.status == 'ACCEPTED' %}
+                  <span class="badge-chip badge-chip-success"><i class="bi bi-check-circle-fill"></i> Hired / In Progress</span>
+                {% elif app.status == 'COMPLETED' %}
+                  <span class="badge-chip bg-primary text-white"><i class="bi bi-award-fill"></i> Work Completed</span>
+                {% elif app.status == 'APPLIED' %}
+                  <span class="badge-chip badge-chip-warning"><i class="bi bi-hourglass-split"></i> Under Review</span>
+                {% else %}
+                  <span class="badge-chip bg-secondary-subtle text-muted">Closed</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <h5 class="fw-bold mb-1" style="color: var(--text-main);">{{ app.job.title }}</h5>
+            
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="wage-pill p-1 px-2 fs-6">₹{{ app.job.pay_offered|floatformat:0 }}/day</span>
+              <span class="small text-muted"><i class="bi bi-clock me-1"></i>{{ app.job.duration }}</span>
+            </div>
+
+            <div class="small text-muted mb-3">
+              <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ app.job.location }}</div>
+              <div><i class="bi bi-calendar-event me-1"></i>Start Date: {{ app.job.start_date|date:"M d, Y" }}</div>
+              <div><i class="bi bi-telephone me-1"></i>Contact: <strong>{{ app.job.contact_phone }}</strong> ({{ app.job.contact_person }})</div>
+            </div>
+
+            {% if app.worker_note %}
+              <div class="p-2 rounded-2 small text-muted mb-2" style="background: var(--bg-canvas);">
+                <strong>Your Note:</strong> {{ app.worker_note }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+            <span class="text-muted small">Applied on {{ app.applied_at|date:"M d, Y" }}</span>
+            <div class="d-flex gap-2">
+              <a href="{% url 'start_chat_with_job' app.job.contractor.id app.job.id %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-chat-dots me-1"></i> Chat
+              </a>
+              <a href="{% url 'job_detail' app.job.id %}" class="btn btn-sm btn-brand-outline">Details</a>
+              {% if app.status == 'COMPLETED' %}
+                <a href="{% url 'create_review' app.job.id app.job.contractor.id %}" class="btn btn-sm btn-brand">Rate Contractor</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center py-5">
+        <div class="p-5 rounded-4" style="background: var(--bg-surface); border: 1px dashed var(--border-subtle);">
+          <i class="bi bi-briefcase fs-1 text-muted mb-3 d-block"></i>
+          <h4 class="fw-bold" style="color: var(--text-main);">No Applications Submitted Yet</h4>
+          <p class="text-muted small mb-3">Explore daily wage opportunities in your neighborhood and apply with one tap.</p>
+          <a href="{% url 'worker_dashboard' %}" class="btn btn-brand">Find Jobs Now</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

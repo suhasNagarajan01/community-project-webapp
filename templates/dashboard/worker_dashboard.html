@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Worker Home - Nearby Daily Wage Jobs{% endblock %}
+
+{% block content %}
+<div class="container py-3 py-md-4">
+
+  <!-- Worker Welcome Strip -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1" style="color: var(--text-main);">
+        Find Daily Work Today, {{ user.first_name|default:user.username }}
+      </h2>
+      <p class="text-muted small mb-0">
+        <i class="bi bi-geo-alt-fill text-danger"></i> Showing verified jobs around <strong>{{ user.locality|default:"Bengaluru Central" }}</strong>
+      </p>
+    </div>
+
+    <!-- Quick Wallet Balance Pill -->
+    <a href="{% url 'worker_wallet' %}" class="btn btn-sm glass-panel p-2 px-3 d-flex align-items-center gap-3 text-decoration-none" style="border: 1px solid var(--border-subtle);">
+      <div class="rounded-circle p-2 d-flex align-items-center justify-content-center" style="background: var(--brand-primary-light); color: var(--brand-primary);">
+        <i class="bi bi-wallet2 fs-5"></i>
+      </div>
+      <div class="text-start">
+        <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">WALLET BALANCE</small>
+        <span class="fw-bold fs-6" style="color: var(--brand-primary);">₹{{ user.worker_profile.expected_daily_wage|default:"850"|floatformat:0 }} Avg/Day</span>
+      </div>
+      <i class="bi bi-chevron-right text-muted small ms-2"></i>
+    </a>
+  </div>
+
+  <!-- Search Bar with Live HTMX -->
+  <div class="search-box-wrap mb-3">
+    <i class="bi bi-search search-icon"></i>
+    <input type="text" 
+           name="q" 
+           placeholder="Search by skill, job title, locality (e.g. Electrician, Painter, Indiranagar)..." 
+           value="{{ query }}"
+           hx-get="{% url 'worker_dashboard' %}"
+           hx-trigger="keyup changed delay:300ms, search"
+           hx-target="#jobs-container"
+           hx-include="[name='category'], [name='sort'], [name='min_wage'], [name='radius']"
+           hx-indicator="#loading-spinner">
+  </div>
+
+  <!-- Category Filter Pills Strip -->
+  <div class="category-filter-strip mb-3">
+    <a href="{% url 'worker_dashboard' %}" 
+       class="category-chip-btn {% if not active_category %}active{% endif %}"
+       hx-get="{% url 'worker_dashboard' %}"
+       hx-target="#jobs-container"
+       hx-push-url="true">
+      <i class="bi bi-grid-fill"></i> All Jobs
+    </a>
+    {% for cat_val, cat_label in categories %}
+      <a href="{% url 'worker_dashboard' %}?category={{ cat_val }}" 
+         class="category-chip-btn {% if active_category == cat_val %}active{% endif %}"
+         hx-get="{% url 'worker_dashboard' %}?category={{ cat_val }}"
+         hx-target="#jobs-container"
+         hx-push-url="true">
+        {{ cat_label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- Secondary Filter Bar (Wage & Sort) -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 px-1">
+    <div class="d-flex align-items-center gap-2">
+      <span class="small text-muted fw-semibold" id="jobs-count-text">
+        <span id="loading-spinner" class="spinner-border spinner-border-sm text-success htmx-indicator me-1" role="status"></span>
+        Available Openings
+      </span>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <select name="radius" 
+              class="form-select form-select-sm border-subtle rounded-pill py-1 px-3" 
+              style="width: auto; background-color: var(--bg-surface); color: var(--text-main);"
+              hx-get="{% url 'worker_dashboard' %}"
+              hx-target="#jobs-container"
+              hx-include="[name='q'], [name='category'], [name='sort'], [name='min_wage']">
+        <option value="">Distance: All Openings</option>
+        <option value="3" {% if active_radius == '3' %}selected{% endif %}>Within 3 km</option>
+        <option value="5" {% if active_radius == '5' %}selected{% endif %}>Within 5 km</option>
+        <option value="8" {% if active_radius == '8' %}selected{% endif %}>Within 8 km</option>
+        <option value="12" {% if active_radius == '12' %}selected{% endif %}>Within 12 km</option>
+      </select>
+
+      <select name="sort" 
+              class="form-select form-select-sm border-subtle rounded-pill py-1 px-3" 
+              style="width: auto; background-color: var(--bg-surface); color: var(--text-main);"
+              hx-get="{% url 'worker_dashboard' %}"
+              hx-target="#jobs-container"
+              hx-include="[name='q'], [name='category'], [name='min_wage'], [name='radius']">
+        <option value="newest">Sort: Newest First</option>
+        <option value="wage_high">Sort: Highest Wage</option>
+        <option value="distance">Sort: Nearest Distance</option>
+      </select>
+
+      <select name="min_wage" 
+              class="form-select form-select-sm border-subtle rounded-pill py-1 px-3" 
+              style="width: auto; background-color: var(--bg-surface); color: var(--text-main);"
+              hx-get="{% url 'worker_dashboard' %}"
+              hx-target="#jobs-container"
+              hx-include="[name='q'], [name='category'], [name='sort'], [name='radius']">
+        <option value="">Wage: Any</option>
+        <option value="600">₹600+ / day</option>
+        <option value="800">₹800+ / day</option>
+        <option value="1000">₹1000+ / day</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Jobs List Grid Container -->
+  <div class="row" id="jobs-container">
+    {% include 'dashboard/partials/job_cards.html' %}
+  </div>
+
+</div>
+{% endblock %}

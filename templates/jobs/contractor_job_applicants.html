@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Applicants for {{ job.title }} - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Breadcrumbs -->
+  <div class="mb-3">
+    <a href="{% url 'contractor_jobs' %}" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-arrow-left me-1"></i> Back to My Jobs
+    </a>
+  </div>
+
+  <!-- Job Header Card -->
+  <div class="app-card p-4 mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge-chip badge-chip-brand">{{ job.get_category_display }}</span>
+          <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">Status: {{ job.get_status_display }}</span>
+        </div>
+        <h3 class="fw-bold mb-1" style="color: var(--text-main);">{{ job.title }}</h3>
+        <p class="text-muted small mb-0"><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ job.location }} | Pay: <strong>₹{{ job.pay_offered|floatformat:0 }}/day</strong></p>
+      </div>
+
+      <div class="d-flex gap-3 text-center">
+        <div class="p-2 px-3 rounded-3" style="background: var(--bg-canvas);">
+          <small class="text-muted d-block lh-1">WORKERS NEEDED</small>
+          <span class="fw-bold fs-5" style="color: var(--text-main);">{{ job.workers_required }}</span>
+        </div>
+        <div class="p-2 px-3 rounded-3" style="background: var(--brand-primary-light);">
+          <small class="text-muted d-block lh-1">HIRED SO FAR</small>
+          <span class="fw-bold fs-5 text-success">{{ job.workers_hired }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applicants List -->
+  <h4 class="fw-bold mb-3" style="color: var(--text-main);">Worker Applicants ({{ applications.count }})</h4>
+
+  <div class="row g-3">
+    {% for app in applications %}
+      <div class="col-md-6 col-lg-6">
+        <div class="app-card p-4 h-100 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 48px; height: 48px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.15rem; border: 2px solid var(--brand-primary);">
+                  {{ app.worker.first_name|default:app.worker.username|slice:":1"|upper }}
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-0" style="color: var(--text-main);">{{ app.worker.get_full_name|default:app.worker.username }}</h5>
+                  <div class="star-rating small">
+                    <i class="bi bi-star-fill"></i> {{ app.worker.worker_profile.rating|default:"4.8" }}
+                    <span class="text-muted fw-normal">({{ app.worker.worker_profile.total_ratings_count|default:"10" }} reviews)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Application Status Badge -->
+              <div>
+                {% if app.status == 'ACCEPTED' %}
+                  <span class="badge-chip badge-chip-success"><i class="bi bi-check-circle-fill"></i> Hired</span>
+                {% elif app.status == 'COMPLETED' %}
+                  <span class="badge-chip bg-primary text-white"><i class="bi bi-award-fill"></i> Completed & Paid</span>
+                {% elif app.status == 'REJECTED' %}
+                  <span class="badge-chip bg-danger-subtle text-danger">Not Selected</span>
+                {% else %}
+                  <span class="badge-chip badge-chip-warning">Applied</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Reliability & Attendance metrics -->
+            <div class="row g-2 mb-3 p-2 rounded-2 text-center small" style="background: var(--bg-canvas);">
+              <div class="col-4 border-end border-subtle">
+                <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">RELIABILITY</span>
+                <strong class="text-success">{{ app.worker.worker_profile.reliability_score|default:"95" }}%</strong>
+              </div>
+              <div class="col-4 border-end border-subtle">
+                <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">ATTENDANCE</span>
+                <strong class="text-primary">{{ app.worker.worker_profile.attendance_score|default:"98" }}%</strong>
+              </div>
+              <div class="col-4">
+                <span class="text-muted d-block lh-1" style="font-size: 0.70rem;">COMPLETED</span>
+                <strong>{{ app.worker.worker_profile.completed_jobs_count|default:"15" }} jobs</strong>
+              </div>
+            </div>
+
+            <!-- Skills & Worker Message -->
+            <div class="small text-muted mb-2">
+              <strong>Skills:</strong> {{ app.worker.worker_profile.skills }}
+            </div>
+            <div class="small text-muted mb-3">
+              <i class="bi bi-telephone me-1"></i>Phone: <strong>{{ app.worker.phone_number|default:"Shared upon hire" }}</strong>
+            </div>
+
+            {% if app.worker_note %}
+              <div class="p-2 rounded-2 small mb-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+                <strong>Worker's Note:</strong> "{{ app.worker_note }}"
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-3 border-top border-subtle d-flex flex-wrap gap-2 justify-content-between align-items-center">
+            <div class="d-flex gap-2">
+              <a href="{% url 'start_chat_with_job' app.worker.id job.id %}" class="btn btn-sm btn-outline-secondary" title="Chat with Worker">
+                <i class="bi bi-chat-dots-fill"></i> Chat
+              </a>
+              <a href="{% url 'user_profile' app.worker.id %}" class="btn btn-sm btn-outline-secondary">
+                Profile
+              </a>
+            </div>
+
+            <div class="d-flex gap-2">
+              {% if app.status == 'APPLIED' %}
+                <a href="{% url 'update_application_status' app.id 'reject' %}" class="btn btn-sm btn-outline-danger">Decline</a>
+                <a href="{% url 'update_application_status' app.id 'accept' %}" class="btn btn-sm btn-brand">
+                  <i class="bi bi-check-lg me-1"></i> Hire Worker
+                </a>
+              {% elif app.status == 'ACCEPTED' %}
+                <a href="{% url 'update_application_status' app.id 'complete' %}" class="btn btn-sm btn-success">
+                  <i class="bi bi-cash-coin me-1"></i> Mark Work Complete & Pay
+                </a>
+              {% elif app.status == 'COMPLETED' %}
+                <a href="{% url 'create_review' job.id app.worker.id %}" class="btn btn-sm btn-brand-outline">
+                  <i class="bi bi-star-fill me-1"></i> Rate Worker
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center py-5">
+        <div class="p-4 rounded-4" style="background: var(--bg-surface); border: 1px dashed var(--border-subtle);">
+          <i class="bi bi-people fs-1 text-muted mb-2 d-block"></i>
+          <h5 class="fw-bold" style="color: var(--text-main);">No applicants yet for this job</h5>
+          <p class="text-muted small mb-0">Your job is visible to nearby workers. You will receive notifications when workers apply.</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

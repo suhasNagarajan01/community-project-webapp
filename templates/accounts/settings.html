@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings & Appearance - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <div class="glass-panel p-4 p-md-5 mb-4">
+        <h3 class="fw-bold mb-4" style="color: var(--text-main);">
+          <i class="bi bi-palette2 me-2" style="color: var(--brand-primary);"></i> Appearance & Theme
+        </h3>
+
+        <!-- Dual Theme Choice: Emerald Green vs Warm Earth Beige -->
+        <label class="form-label fw-bold mb-2" style="color: var(--text-main);">Brand Color Palette</label>
+        <p class="text-muted small mb-3">Choose the aesthetic that best suits your daily working environment.</p>
+
+        <div class="row g-3 mb-4">
+          <!-- Palette 1: Emerald Green & Crisp White -->
+          <div class="col-sm-6">
+            <div class="app-card p-3 h-100 cursor-pointer" onclick="DailyWageTheme.setTheme('green')" style="cursor: pointer;">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="fw-bold" style="color: var(--text-main);">Emerald Green & White</span>
+                <span class="badge bg-success-subtle text-success small">Default</span>
+              </div>
+              <div class="d-flex gap-2 mb-2">
+                <span class="rounded-circle d-inline-block shadow-sm" style="width: 28px; height: 28px; background: #059669;"></span>
+                <span class="rounded-circle d-inline-block shadow-sm" style="width: 28px; height: 28px; background: #10b981;"></span>
+                <span class="rounded-circle d-inline-block shadow-sm" style="width: 28px; height: 28px; background: #34d399;"></span>
+                <span class="rounded-circle d-inline-block shadow-sm border" style="width: 28px; height: 28px; background: #ffffff;"></span>
+              </div>
+              <small class="text-muted d-block">Fresh, high-contrast, modern prosperity and wage aesthetic.</small>
+              <button type="button" class="btn btn-sm btn-brand w-100 mt-3" data-theme-btn="green">
+                Activate Emerald Theme
+              </button>
+            </div>
+          </div>
+
+          <!-- Palette 2: Warm Earth & Soft Beige -->
+          <div class="col-sm-6">
+            <div class="app-card p-3 h-100 cursor-pointer" onclick="DailyWageTheme.setTheme('brown')" style="cursor: pointer;">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="fw-bold" style="color: var(--text-main);">Warm Earth & Beige</span>
+                <span class="badge bg-warning-subtle text-warning small">Warm Craft</span>
+              </div>
+              <div class="d-flex gap-2 mb-2">
+                <span class="rounded-circle d-inline-block shadow-sm" style="width: 28px; height: 28px; background: #78350f;"></span>
+                <span class="rounded-circle d-inline-block shadow-sm" style="width: 28px; height: 28px; background: #92400e;"></span>
+                <span class="rounded-circle d-inline-block shadow-sm" style="width: 28px; height: 28px; background: #d97706;"></span>
+                <span class="rounded-circle d-inline-block shadow-sm border" style="width: 28px; height: 28px; background: #fef3c7;"></span>
+              </div>
+              <small class="text-muted d-block">Earthy artisan tones, warm amber, clay and soft linen comfort.</small>
+              <button type="button" class="btn btn-sm btn-brand-outline w-100 mt-3" data-theme-btn="brown">
+                Activate Warm Earth Theme
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-subtle my-4">
+
+        <!-- Dark / Light Mode -->
+        <label class="form-label fw-bold mb-2" style="color: var(--text-main);">Display Mode</label>
+        <div class="d-flex gap-3 mb-4">
+          <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-2 px-4 py-2" onclick="DailyWageTheme.toggleMode()">
+            <i class="bi bi-moon-stars-fill"></i> Toggle Light / Dark Mode
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Account Info -->
+      <div class="app-card p-4">
+        <h5 class="fw-bold mb-3" style="color: var(--text-main);">Account Information</h5>
+        <div class="row g-3 small">
+          <div class="col-sm-6">
+            <span class="text-muted d-block">Username:</span>
+            <strong>{{ user.username }}</strong>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted d-block">Registered Role:</span>
+            <strong>{{ user.get_role_display }}</strong>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted d-block">Phone:</span>
+            <strong>{{ user.phone_number|default:"Not specified" }}</strong>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted d-block">Registered City:</span>
+            <strong>{{ user.city }} ({{ user.locality }})</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

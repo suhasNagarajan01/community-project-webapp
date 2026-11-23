@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Submit Review - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="glass-panel p-4 p-md-5">
+
+        <div class="text-center mb-4">
+          <div class="rounded-circle d-inline-flex p-3 mb-2" style="background: var(--brand-primary-light); color: #f59e0b;">
+            <i class="bi bi-star-fill fs-2"></i>
+          </div>
+          <h3 class="fw-bold mb-1" style="color: var(--text-main);">
+            {% if target_role == 'WORKER' %}Rate Worker Performance{% else %}Rate Contractor Experience{% endif %}
+          </h3>
+          <p class="text-muted small">
+            Job: <strong>{{ job.title }}</strong> | Reviewing: <strong>{{ reviewee.get_full_name|default:reviewee.username }}</strong>
+          </p>
+        </div>
+
+        <form method="POST" action="{% url 'create_review' job.id reviewee.id %}">
+          {% csrf_token %}
+
+          {% if target_role == 'WORKER' %}
+            <!-- Worker 4-Factor Rating Criteria -->
+            <div class="mb-3 p-3 rounded-3" style="background: var(--bg-canvas);">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">1. Punctuality & Timekeeping</span>
+                  <small class="text-muted">Did the worker arrive on time and honor site schedule?</small>
+                </div>
+                <select name="punctuality" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Outstanding</option>
+                  <option value="4">4 ★ - Good</option>
+                  <option value="3">3 ★ - Average</option>
+                  <option value="2">2 ★ - Late</option>
+                  <option value="1">1 ★ - Poor</option>
+                </select>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">2. Work Quality & Finish</span>
+                  <small class="text-muted">Standard of skill, attention to detail, and task execution</small>
+                </div>
+                <select name="work_quality" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Excellent</option>
+                  <option value="4">4 ★ - Very Good</option>
+                  <option value="3">3 ★ - Satisfactory</option>
+                  <option value="2">2 ★ - Needs Improvement</option>
+                  <option value="1">1 ★ - Defective</option>
+                </select>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">3. Communication & Politeness</span>
+                  <small class="text-muted">Clarity of updates, professional and respectful behavior</small>
+                </div>
+                <select name="communication" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Exceptional</option>
+                  <option value="4">4 ★ - Polite</option>
+                  <option value="3">3 ★ - Acceptable</option>
+                  <option value="2">2 ★ - Low responsiveness</option>
+                  <option value="1">1 ★ - Rude</option>
+                </select>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">4. Reliability & Independence</span>
+                  <small class="text-muted">Completed duties without constant supervision</small>
+                </div>
+                <select name="reliability" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Highly Reliable</option>
+                  <option value="4">4 ★ - Reliable</option>
+                  <option value="3">3 ★ - Moderate</option>
+                  <option value="2">2 ★ - Unpredictable</option>
+                  <option value="1">1 ★ - Left task incomplete</option>
+                </select>
+              </div>
+            </div>
+
+          {% else %}
+            <!-- Contractor 4-Factor Rating Criteria -->
+            <div class="mb-3 p-3 rounded-3" style="background: var(--bg-canvas);">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">1. Timely Payment</span>
+                  <small class="text-muted">Did employer clear agreed daily wages without hassle or delays?</small>
+                </div>
+                <select name="timely_payment" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Paid Instantly</option>
+                  <option value="4">4 ★ - Prompt</option>
+                  <option value="3">3 ★ - Paid with delay</option>
+                  <option value="2">2 ★ - Disputed wage</option>
+                  <option value="1">1 ★ - Payment issues</option>
+                </select>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">2. Professional Behavior</span>
+                  <small class="text-muted">Respectful treatment of workers on site</small>
+                </div>
+                <select name="behavior" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Very Courteous</option>
+                  <option value="4">4 ★ - Good</option>
+                  <option value="3">3 ★ - Normal</option>
+                  <option value="2">2 ★ - Difficult</option>
+                  <option value="1">1 ★ - Disrespectful</option>
+                </select>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">3. Job Scope Accuracy</span>
+                  <small class="text-muted">Was the work matched to the description in the post?</small>
+                </div>
+                <select name="accuracy" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Exactly as described</option>
+                  <option value="4">4 ★ - Mostly accurate</option>
+                  <option value="3">3 ★ - Minor changes</option>
+                  <option value="2">2 ★ - Misleading</option>
+                  <option value="1">1 ★ - Totally different</option>
+                </select>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-semibold d-block" style="color: var(--text-main);">4. Safety Conditions</span>
+                  <small class="text-muted">Safe working environment, drinking water, basic precautions</small>
+                </div>
+                <select name="safety" class="form-select form-select-sm w-auto">
+                  <option value="5">5 ★ - Very Safe & Prepared</option>
+                  <option value="4">4 ★ - Good</option>
+                  <option value="3">3 ★ - Average</option>
+                  <option value="2">2 ★ - Hazardous</option>
+                  <option value="1">1 ★ - Unsafe</option>
+                </select>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold small">Detailed Review & Experience</label>
+            {{ form.comment }}
+          </div>
+
+          <div class="d-flex justify-content-end gap-3 pt-3 border-top border-subtle">
+            <a href="{% url 'dashboard_router' %}" class="btn btn-outline-secondary">Skip / Later</a>
+            <button type="submit" class="btn btn-brand px-4">
+              <i class="bi bi-check2-circle me-1"></i> Submit Verified Review
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

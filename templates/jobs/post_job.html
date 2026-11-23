@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Post a Daily Wage Job - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-panel p-4 p-md-5">
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="rounded-3 p-3 text-white" style="background: var(--brand-gradient);">
+            <i class="bi bi-briefcase-fill fs-3"></i>
+          </div>
+          <div>
+            <h2 class="fw-bold mb-0" style="color: var(--text-main);">Post a Daily Wage Job</h2>
+            <p class="text-muted small mb-0">Fill in the details to immediately broadcast this assignment to verified workers nearby.</p>
+          </div>
+        </div>
+
+        <form method="POST" action="{% url 'post_job' %}">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Job Title *</label>
+            {{ form.title }}
+            <div class="form-text small">e.g. Need 2 Electricians for Office Wiring, Urgent 1-Day Masonry Repair</div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Work Category *</label>
+              {{ form.category }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Key Skill Required *</label>
+              {{ form.required_skill }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Scope & Job Description *</label>
+            {{ form.description }}
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Daily Wage Pay Offered (₹) *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-subtle">₹</span>
+                {{ form.pay_offered }}
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Pay Structure *</label>
+              {{ form.pay_type }}
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Site Address / Locality *</label>
+              {{ form.location }}
+              <div class="form-text small">e.g. Indiranagar, Koramangala, Whitefield, HSR Layout</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">City *</label>
+              {{ form.city }}
+            </div>
+          </div>
+
+          <!-- Dynamic Proximity Radius & Match Timing Configuration -->
+          <div class="p-3 rounded-3 mb-3" style="background: var(--brand-gradient-subtle); border: 1.5px solid var(--border-subtle);">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="fw-bold small d-flex align-items-center gap-2" style="color: var(--brand-primary);">
+                <i class="bi bi-radar"></i> Proximity Radius & Priority Match Timing
+              </span>
+              <span class="badge bg-success-subtle text-success small" id="analysis-live-badge">
+                <i class="bi bi-check-circle me-1"></i>Live Proximity Active
+              </span>
+            </div>
+
+            <div class="row g-3 mb-2">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Target Proximity Radius (N-km) *</label>
+                {{ form.radius_km }}
+                <div class="form-text small">Sets the matching perimeter for instant priority worker alerts.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small">Priority Alert Window (Match Timing) *</label>
+                {{ form.priority_window_minutes }}
+                <div class="form-text small">Nearby workers receive early alerts before broad distribution.</div>
+              </div>
+            </div>
+
+            <!-- Live Analysis Feedback Card -->
+            <div class="p-3 rounded-3 mt-2" id="location-analysis-box" style="background: var(--bg-surface); border: 1px dashed var(--brand-primary);">
+              <div class="d-flex align-items-center gap-3">
+                <div class="spinner-border spinner-border-sm text-primary d-none" id="analysis-spinner" role="status"></div>
+                <i class="bi bi-geo-alt-fill fs-4" style="color: var(--brand-primary);" id="analysis-icon"></i>
+                <div class="flex-grow-1">
+                  <div class="fw-bold small" id="analysis-title" style="color: var(--text-main);">
+                    Location Analysis Ready
+                  </div>
+                  <div class="small text-muted" id="analysis-desc">
+                    Enter your site location to preview matching nearby workers within the selected radius.
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-primary fs-6 px-3 py-2 rounded-pill" id="nearby-workers-count">
+                    -- Nearby
+                  </span>
+                </div>
+              </div>
+              <div class="mt-2 pt-2 border-top border-subtle small text-muted d-flex align-items-center gap-2" style="font-size: 0.75rem;">
+                <i class="bi bi-info-circle-fill text-primary"></i>
+                <span>Nearby workers are informed first. The application remains open and accessible platform-wide for all workers.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Number of Workers Required *</label>
+              {{ form.workers_required }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Working Hours / Duration *</label>
+              {{ form.duration }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Start Date *</label>
+              {{ form.start_date }}
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Contact Phone Number *</label>
+              {{ form.contact_phone }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold small">Site Contact Person</label>
+              {{ form.contact_person }}
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-3 pt-3 border-top border-subtle">
+            <a href="{% url 'contractor_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-brand px-4 py-2">
+              <i class="bi bi-broadcast me-1"></i> Broadcast Job Posting
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  (function() {
+    const locInput = document.getElementById('job_location_input') || document.querySelector('[name="location"]');
+    const radiusSelect = document.getElementById('radius_km_select') || document.querySelector('[name="radius_km"]');
+    const skillInput = document.querySelector('[name="required_skill"]');
+    const countBadge = document.getElementById('nearby-workers-count');
+    const titleEl = document.getElementById('analysis-title');
+    const descEl = document.getElementById('analysis-desc');
+    const spinner = document.getElementById('analysis-spinner');
+    const icon = document.getElementById('analysis-icon');
+
+    let debounceTimer;
+
+    function runAnalysis() {
+      const location = locInput ? locInput.value.trim() : '';
+      const radius = radiusSelect ? radiusSelect.value : 5;
+      const skill = skillInput ? skillInput.value.trim() : '';
+
+      if (!location) {
+        if (titleEl) titleEl.innerText = "Location Analysis Ready";
+        if (descEl) descEl.innerText = "Enter your site location to preview matching nearby workers within the selected radius.";
+        if (countBadge) countBadge.innerText = "-- Nearby";
+        return;
+      }
+
+      if (spinner) spinner.classList.remove('d-none');
+      if (icon) icon.classList.add('d-none');
+
+      fetch(`/jobs/api/analyze-location/?location=${encodeURIComponent(location)}&radius_km=${encodeURIComponent(radius)}&skill=${encodeURIComponent(skill)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (spinner) spinner.classList.add('d-none');
+          if (icon) icon.classList.remove('d-none');
+
+          if (data.status === 'success') {
+            if (countBadge) {
+              countBadge.innerText = `${data.nearby_count} Workers Nearby`;
+              countBadge.className = data.nearby_count > 0 ? 'badge bg-success fs-6 px-3 py-2 rounded-pill' : 'badge bg-secondary fs-6 px-3 py-2 rounded-pill';
+            }
+            if (titleEl) {
+              titleEl.innerText = `Found ${data.nearby_count} Active Workers in ${data.detected_locality} (${data.radius_km} km)`;
+            }
+            if (descEl) {
+              descEl.innerHTML = `<strong>Priority Match Timing:</strong> Nearby workers receive alerts first for <strong>${data.match_timing_minutes} minutes</strong>. After this priority window, the application remains open and accessible platform-wide for all workers.`;
+            }
+          }
+        })
+        .catch(err => {
+          if (spinner) spinner.classList.add('d-none');
+          if (icon) icon.classList.remove('d-none');
+          console.debug("Location analysis error:", err);
+        });
+    }
+
+    if (locInput) {
+      locInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(runAnalysis, 400);
+      });
+    }
+
+    if (radiusSelect) {
+      radiusSelect.addEventListener('change', runAnalysis);
+    }
+
+    if (skillInput) {
+      skillInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(runAnalysis, 500);
+      });
+    }
+
+    // Run on initial load if location already has value
+    if (locInput && locInput.value) {
+      runAnalysis();
+    }
+  })();
+</script>
+{% endblock %}

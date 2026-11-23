@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - RojgarSetu Daily Wage Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-7">
+      <div class="glass-panel p-4 p-md-5">
+
+        <div class="text-center mb-4">
+          <div class="rounded-circle d-inline-flex p-3 mb-2" style="background: var(--brand-primary-light); color: var(--brand-primary);">
+            <i class="bi bi-person-plus fs-2"></i>
+          </div>
+          <h3 class="fw-bold mb-1" style="color: var(--text-main);">Join RojgarSetu</h3>
+          <p class="text-muted small">Choose your profile type to get started</p>
+        </div>
+
+        <!-- Role Selector Tabs -->
+        <ul class="nav nav-pills nav-fill mb-4 p-1 rounded-pill" style="background-color: var(--border-subtle);" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab == 'WORKER' %}active{% endif %}" id="reg-worker-tab" data-bs-toggle="pill" data-bs-target="#reg-worker-pane" type="button" role="tab" style="{% if role_tab == 'WORKER' %}background: var(--brand-gradient); color: #fff;{% endif %}">
+              <i class="bi bi-person-badge me-1"></i> I am a Worker
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab == 'CONTRACTOR' %}active{% endif %}" id="reg-contractor-tab" data-bs-toggle="pill" data-bs-target="#reg-contractor-pane" type="button" role="tab" style="{% if role_tab == 'CONTRACTOR' %}background: var(--brand-gradient); color: #fff;{% endif %}">
+              <i class="bi bi-building me-1"></i> I am a Contractor
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Worker Registration Pane -->
+          <div class="tab-pane fade {% if role_tab == 'WORKER' %}show active{% endif %}" id="reg-worker-pane" role="tabpanel">
+            <form method="POST" action="{% url 'register' %}">
+              {% csrf_token %}
+              <input type="hidden" name="role_type" value="WORKER">
+
+              <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Full Name *</label>
+                  <input type="text" name="first_name" class="form-control" placeholder="e.g. Ramesh Kumar" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Username *</label>
+                  <input type="text" name="username" class="form-control" placeholder="e.g. ramesh_electrician" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Mobile Phone Number *</label>
+                  <input type="text" name="phone_number" class="form-control" placeholder="e.g. 9876543210" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Area / Locality in City *</label>
+                  <input type="text" name="locality" class="form-control" placeholder="e.g. Indiranagar, Bengaluru" required>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">Primary Skills (Comma-separated) *</label>
+                <input type="text" name="skills" class="form-control" placeholder="e.g. Electrician, Inverter Wiring, Appliance Repair" required>
+                <div class="form-text small">Helps contractors match with your expertise.</div>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Expected Daily Wage (₹) *</label>
+                  <input type="number" step="10" name="expected_daily_wage" class="form-control" value="800" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Experience (Years) *</label>
+                  <input type="number" step="0.5" name="experience_years" class="form-control" value="3.0" required>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold small">Languages Known</label>
+                <input type="text" name="languages_known" class="form-control" value="Kannada, Hindi, English">
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold small">Password (Min 6 chars) *</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" minlength="6" required>
+              </div>
+
+              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold">
+                Complete Worker Registration
+              </button>
+            </form>
+          </div>
+
+          <!-- Contractor Registration Pane -->
+          <div class="tab-pane fade {% if role_tab == 'CONTRACTOR' %}show active{% endif %}" id="reg-contractor-pane" role="tabpanel">
+            <form method="POST" action="{% url 'register' %}">
+              {% csrf_token %}
+              <input type="hidden" name="role_type" value="CONTRACTOR">
+
+              <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Contact Person Name *</label>
+                  <input type="text" name="first_name" class="form-control" placeholder="e.g. Rajesh Sharma" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Company / Employer Name *</label>
+                  <input type="text" name="company_name" class="form-control" placeholder="e.g. BuildWell Infrastructure" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Contractor Type *</label>
+                  <select name="business_type" class="form-select">
+                    <option value="Construction Contractor">Construction Contractor</option>
+                    <option value="Individual / Household">Individual / Household</option>
+                    <option value="Facility Management">Facility Management</option>
+                    <option value="Interior & Renovation">Interior & Renovation</option>
+                    <option value="Event & Catering">Event & Catering</option>
+                    <option value="Small Enterprise">Small Enterprise</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Username *</label>
+                  <input type="text" name="username" class="form-control" placeholder="e.g. buildwell_rajesh" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Contact Phone Number *</label>
+                  <input type="text" name="phone_number" class="form-control" placeholder="e.g. 9845012345" required>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label fw-semibold small">Office / Site Locality *</label>
+                  <input type="text" name="locality" class="form-control" placeholder="e.g. Koramangala, Bengaluru" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold small">Password (Min 6 chars) *</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" minlength="6" required>
+              </div>
+
+              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold">
+                Complete Contractor Registration
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="text-center pt-4 border-top border-subtle mt-4">
+          <p class="text-muted small mb-0">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="fw-bold" style="color: var(--brand-primary);">Log In Here</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

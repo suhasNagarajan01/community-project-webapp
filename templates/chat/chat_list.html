@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Messages & Chats - RojgarSetu{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <h2 class="fw-bold mb-0" style="color: var(--text-main);">Chat & Job Discussions</h2>
+            <span class="badge bg-warning text-dark font-monospace" style="font-size: 0.75rem; font-weight: 700;">
+              <i class="bi bi-cone-striped me-1"></i>ADDING SOON
+            </span>
+          </div>
+          <p class="text-muted small mb-0">Direct coordination between workers and employers.</p>
+        </div>
+      </div>
+
+      <!-- Adding Soon Roadmap Alert Box -->
+      <div class="p-3 rounded-4 mb-4" style="background: var(--brand-gradient-subtle); border: 1.5px dashed var(--brand-primary);">
+        <div class="d-flex align-items-start gap-3">
+          <div class="rounded-circle p-2 text-white" style="background: var(--brand-gradient);">
+            <i class="bi bi-stars fs-4"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1" style="color: var(--brand-primary);">
+              🚀 Real-Time Voice Notes & AI Chat Assistant — Adding Soon (Phase 2)
+            </h6>
+            <p class="small text-muted mb-2" style="line-height: 1.5;">
+              We are actively developing multilingual voice messaging (Kannada, Hindi, Telugu, English) and AI-assisted wage settlement to empower daily wage workers. 
+              Basic text messaging is currently accessible in preview mode.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-secondary-subtle text-secondary small">
+                <i class="bi bi-mic me-1"></i>Voice Notes Coming Soon
+              </span>
+              <span class="badge bg-secondary-subtle text-secondary small">
+                <i class="bi bi-robot me-1"></i>AI Wage Assistant
+              </span>
+              <span class="badge bg-secondary-subtle text-secondary small">
+                <i class="bi bi-telephone-outbound me-1"></i>Direct Phone Calling Active
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-card overflow-hidden">
+        <div class="list-group list-group-flush">
+          {% for conv in conversations %}
+            <a href="{% url 'chat_detail' conv.id %}" class="list-group-item list-group-item-action p-3 d-flex align-items-center gap-3 border-bottom border-subtle" style="background-color: var(--bg-surface);">
+              <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 48px; height: 48px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.15rem; border: 2px solid var(--brand-primary);">
+                {{ conv.other_person.first_name|default:conv.other_person.username|slice:":1"|upper }}
+              </div>
+              
+              <div class="flex-grow-1 min-w-0">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h6 class="fw-bold mb-0 text-truncate" style="color: var(--text-main);">
+                    {{ conv.other_person.get_full_name|default:conv.other_person.username }}
+                  </h6>
+                  <small class="text-muted" style="font-size: 0.70rem;">{{ conv.updated_at|timesince }} ago</small>
+                </div>
+                
+                {% if conv.job %}
+                  <span class="badge bg-secondary-subtle text-secondary small py-0 px-2 rounded-pill mb-1">
+                    {{ conv.job.title|truncatechars:30 }}
+                  </span>
+                {% endif %}
+
+                <p class="text-muted small mb-0 text-truncate">
+                  {% with last_msg=conv.messages.last %}
+                    {% if last_msg %}
+                      {{ last_msg.sender.first_name|default:last_msg.sender.username }}: {{ last_msg.message }}
+                    {% else %}
+                      Start a conversation...
+                    {% endif %}
+                  {% endwith %}
+                </p>
+              </div>
+
+              <i class="bi bi-chevron-right text-muted"></i>
+            </a>
+          {% empty %}
+            <div class="text-center py-5 text-muted">
+              <i class="bi bi-chat-square-dots fs-1 d-block mb-3"></i>
+              <h5 class="fw-bold" style="color: var(--text-main);">No conversations yet</h5>
+              <p class="small mb-3">You can initiate chats directly from job cards or worker profiles.</p>
+              <a href="{% url 'dashboard_router' %}" class="btn btn-brand">Explore Platform</a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

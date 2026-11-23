@@ -1,0 +1,99 @@
+{% for worker in workers %}
+  <div class="col-md-6 col-lg-6 mb-3">
+    <div class="app-card p-3 p-md-4 h-100 d-flex flex-column justify-content-between position-relative">
+      <div>
+        
+        <!-- Header: Avatar, Name, Rating & Ranking Score Badge -->
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 52px; height: 52px; background: var(--brand-primary-light); color: var(--brand-primary); font-size: 1.25rem; border: 2px solid var(--brand-primary);">
+              {{ worker.user.first_name|default:worker.user.username|slice:":1"|upper }}
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <h5 class="fw-bold mb-0" style="color: var(--text-main);">
+                  {{ worker.user.get_full_name|default:worker.user.username }}
+                </h5>
+                {% if worker.reliability_score >= 90 %}
+                  <i class="bi bi-patch-check-fill text-primary" title="Top Rated & Verified Worker"></i>
+                {% endif %}
+              </div>
+              <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ worker.user.locality|default:"Bengaluru" }}</small>
+            </div>
+          </div>
+
+          <!-- Smart Ranking Score Chip -->
+          <div class="text-end">
+            <span class="badge-chip badge-chip-brand mb-1">
+              <i class="bi bi-trophy-fill text-warning"></i> Rank #{{ forloop.counter }}
+            </span>
+            <div class="star-rating small">
+              <i class="bi bi-star-fill"></i> {{ worker.rating }}
+              <span class="text-muted fw-normal">({{ worker.total_ratings_count }})</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills Chips -->
+        <div class="d-flex flex-wrap gap-1 mb-3">
+          {% for skill in worker.skill_list %}
+            <span class="badge bg-secondary-subtle text-secondary small py-1 px-2 rounded-pill">
+              {{ skill }}
+            </span>
+          {% endfor %}
+        </div>
+
+        <!-- Reliability & Attendance Metrics (Ranking Factors) -->
+        <div class="row g-2 mb-3 p-2 rounded-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+          <div class="col-4 text-center border-end border-subtle">
+            <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">RELIABILITY</small>
+            <span class="fw-bold text-success fs-6">{{ worker.reliability_score }}%</span>
+          </div>
+          <div class="col-4 text-center border-end border-subtle">
+            <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">ATTENDANCE</small>
+            <span class="fw-bold text-primary fs-6">{{ worker.attendance_score }}%</span>
+          </div>
+          <div class="col-4 text-center">
+            <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">JOBS DONE</small>
+            <span class="fw-bold fs-6" style="color: var(--text-main);">{{ worker.completed_jobs_count }}</span>
+          </div>
+        </div>
+
+        <!-- Languages & Experience -->
+        <div class="d-flex justify-content-between small text-muted mb-3">
+          <span><i class="bi bi-translate me-1"></i>{{ worker.languages_known }}</span>
+          <span><i class="bi bi-briefcase me-1"></i>{{ worker.experience_years }} yrs exp</span>
+        </div>
+
+      </div>
+
+      <!-- Footer: Daily Wage & Action Buttons -->
+      <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
+        <div>
+          <small class="text-muted d-block lh-1" style="font-size: 0.70rem;">EXPECTED WAGE</small>
+          <span class="wage-pill p-1 px-2 fs-6">
+            ₹{{ worker.expected_daily_wage|floatformat:0 }}<small class="fw-normal">/day</small>
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="{% url 'start_chat' worker.user.id %}" class="btn btn-sm btn-outline-secondary" title="Chat with Worker">
+            <i class="bi bi-chat-dots-fill"></i>
+          </a>
+          <a href="{% url 'user_profile' worker.user.id %}" class="btn btn-sm btn-brand">
+            View Profile & Hire
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% empty %}
+  <div class="col-12 text-center py-5">
+    <div class="p-4 rounded-4" style="background: var(--bg-surface); border: 1px dashed var(--border-subtle);">
+      <i class="bi bi-people fs-1 text-muted mb-2 d-block"></i>
+      <h5 class="fw-bold" style="color: var(--text-main);">No workers found matching your query</h5>
+      <p class="text-muted small mb-3">Try clearing search filters or searching for another trade like Painter, Electrician, Plumber.</p>
+      <a href="{% url 'contractor_dashboard' %}" class="btn btn-sm btn-brand-outline">Clear Filters</a>
+    </div>
+  </div>
+{% endfor %}
