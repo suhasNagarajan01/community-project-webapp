@@ -23,6 +23,7 @@
 
     html.setAttribute('data-theme', theme);
     html.setAttribute('data-mode', mode);
+    html.setAttribute('data-bs-theme', mode === 'dark' ? 'dark' : 'light');
 
     if (metaColorScheme) {
       metaColorScheme.setAttribute('content', mode === 'dark' ? 'dark' : (mode === 'light' ? 'light' : 'light dark'));

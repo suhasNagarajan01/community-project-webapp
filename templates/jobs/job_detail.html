@@ -74,15 +74,32 @@
           </span>
         </div>
 
-        <!-- Location Information -->
-        <h5 class="fw-bold mb-2" style="color: var(--text-main);">Work Location</h5>
-        <div class="p-3 rounded-3 mb-4 d-flex align-items-center gap-3" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
-          <div class="rounded-circle p-2 bg-danger text-white">
-            <i class="bi bi-geo-alt-fill fs-5"></i>
+        <!-- Location & Proximity Information -->
+        <h5 class="fw-bold mb-2" style="color: var(--text-main);">Work Location & Matching Proximity</h5>
+        <div class="p-3 rounded-3 mb-4" style="background: var(--brand-gradient-subtle); border: 1px solid var(--border-subtle);">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="rounded-circle p-2 bg-danger text-white">
+              <i class="bi bi-geo-alt-fill fs-5"></i>
+            </div>
+            <div>
+              <div class="fw-bold fs-6" style="color: var(--text-main);">{{ job.location }}, {{ job.city }}</div>
+              <small class="text-muted">Target Matching Radius: <strong>{{ job.radius_km }} km</strong> • Priority Window: <strong>{{ job.priority_window_minutes }} mins</strong></small>
+            </div>
           </div>
-          <div>
-            <div class="fw-bold" style="color: var(--text-main);">{{ job.location }}, {{ job.city }}</div>
-            <small class="text-muted">Estimated distance: ~{{ job.estimated_distance_km }} km from your locality</small>
+
+          <div class="d-flex flex-wrap gap-2 pt-2 border-top border-subtle small">
+            {% if job.is_in_priority_window %}
+              <span class="badge bg-danger-subtle text-danger fw-semibold">
+                <i class="bi bi-stopwatch me-1"></i>Priority Window Active (Nearby workers alerted first)
+              </span>
+            {% else %}
+              <span class="badge bg-info-subtle text-info-emphasis fw-semibold">
+                <i class="bi bi-check2-all me-1"></i>General Platform Release Active
+              </span>
+            {% endif %}
+            <span class="badge bg-secondary-subtle text-secondary">
+              <i class="bi bi-globe me-1"></i>Open to all platform workers
+            </span>
           </div>
         </div>
 

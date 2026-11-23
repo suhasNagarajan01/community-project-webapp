@@ -40,7 +40,7 @@
            hx-get="{% url 'worker_dashboard' %}"
            hx-trigger="keyup changed delay:300ms, search"
            hx-target="#jobs-container"
-           hx-include="[name='category'], [name='sort'], [name='min_wage']"
+           hx-include="[name='category'], [name='sort'], [name='min_wage'], [name='radius']"
            hx-indicator="#loading-spinner">
   </div>
 
@@ -74,12 +74,25 @@
     </div>
 
     <div class="d-flex align-items-center gap-2">
+      <select name="radius" 
+              class="form-select form-select-sm border-subtle rounded-pill py-1 px-3" 
+              style="width: auto; background-color: var(--bg-surface); color: var(--text-main);"
+              hx-get="{% url 'worker_dashboard' %}"
+              hx-target="#jobs-container"
+              hx-include="[name='q'], [name='category'], [name='sort'], [name='min_wage']">
+        <option value="">Distance: All Openings</option>
+        <option value="3" {% if active_radius == '3' %}selected{% endif %}>Within 3 km</option>
+        <option value="5" {% if active_radius == '5' %}selected{% endif %}>Within 5 km</option>
+        <option value="8" {% if active_radius == '8' %}selected{% endif %}>Within 8 km</option>
+        <option value="12" {% if active_radius == '12' %}selected{% endif %}>Within 12 km</option>
+      </select>
+
       <select name="sort" 
               class="form-select form-select-sm border-subtle rounded-pill py-1 px-3" 
               style="width: auto; background-color: var(--bg-surface); color: var(--text-main);"
               hx-get="{% url 'worker_dashboard' %}"
               hx-target="#jobs-container"
-              hx-include="[name='q'], [name='category'], [name='min_wage']">
+              hx-include="[name='q'], [name='category'], [name='min_wage'], [name='radius']">
         <option value="newest">Sort: Newest First</option>
         <option value="wage_high">Sort: Highest Wage</option>
         <option value="distance">Sort: Nearest Distance</option>
@@ -90,7 +103,7 @@
               style="width: auto; background-color: var(--bg-surface); color: var(--text-main);"
               hx-get="{% url 'worker_dashboard' %}"
               hx-target="#jobs-container"
-              hx-include="[name='q'], [name='category'], [name='sort']">
+              hx-include="[name='q'], [name='category'], [name='sort'], [name='radius']">
         <option value="">Wage: Any</option>
         <option value="600">₹600+ / day</option>
         <option value="800">₹800+ / day</option>

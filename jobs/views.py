@@ -3,14 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import Avg
+from django.http import JsonResponse
 from .models import Job, JobApplication, Review, WalletTransaction
 from .forms import JobPostForm, ReviewForm
 from accounts.models import User, WorkerProfile, ContractorProfile
 from notifications.models import Notification
+from .utils import analyze_location_for_workers, calculate_distance_between, extract_locality_key
 
 @login_required
 def post_job_view(request):
-    """Allows contractors to post daily wage opportunities."""
+    """Allows contractors to post daily wage opportunities with N-km proximity analysis."""
     if not request.user.is_contractor and not request.user.is_staff:
         messages.error(request, "Only contractor accounts can post jobs.")
         return redirect('home')
@@ -21,12 +23,60 @@ def post_job_view(request):
             job = form.save(commit=False)
             job.contractor = request.user
             job.save()
-            messages.success(request, f"Job '{job.title}' posted successfully and is now visible to nearby workers!")
+
+            # Analyze location & dispatch priority alerts to nearby workers within radius_km
+            analysis = analyze_location_for_workers(job.location, job.radius_km, job.required_skill)
+            nearby_workers = analysis['nearby_workers']
+            match_timing = job.priority_window_minutes or analysis['match_timing_minutes']
+
+            # Inform nearby workers first via priority notifications
+            for w_profile in nearby_workers:
+                Notification.objects.create(
+                    recipient=w_profile.user,
+                    title="⚡ Priority Job Alert (Nearby)",
+                    message=f"New {job.title} posted within {job.radius_km} km of {job.location}! You have priority notification for the next {match_timing} minutes.",
+                    notification_type='JOB_POSTED',
+                    link=f"/jobs/{job.id}/"
+                )
+
+            messages.success(
+                request,
+                f"Job '{job.title}' posted! {len(nearby_workers)} nearby worker(s) within {job.radius_km} km have been alerted first ({match_timing}-min priority window). The application remains open platform-wide for all workers."
+            )
             return redirect('contractor_jobs')
     else:
         form = JobPostForm()
 
     return render(request, 'jobs/post_job.html', {'form': form})
+
+
+def analyze_location_api(request):
+    """
+    Live HTMX/Fetch API endpoint to analyze job site location against nearby workers
+    and compute match timings based on the user-selected N-km radius.
+    """
+    location = request.GET.get('location', '').strip()
+    radius_km = request.GET.get('radius_km', 5)
+    skill = request.GET.get('skill', '').strip()
+
+    try:
+        radius_km = float(radius_km)
+    except ValueError:
+        radius_km = 5.0
+
+    analysis = analyze_location_for_workers(location, radius_km, skill=skill if skill else None)
+    detected_locality = extract_locality_key(location).title()
+
+    return JsonResponse({
+        'status': 'success',
+        'location': location,
+        'detected_locality': detected_locality,
+        'radius_km': radius_km,
+        'nearby_count': analysis['nearby_count'],
+        'total_workers': analysis['total_count'],
+        'match_timing_minutes': analysis['match_timing_minutes'],
+        'message': f"Analyzing '{detected_locality}': {analysis['nearby_count']} worker(s) found within {radius_km} km. They will be alerted first with a {analysis['match_timing_minutes']}-min priority window before broad distribution."
+    })
 
 
 def job_detail_view(request, pk):

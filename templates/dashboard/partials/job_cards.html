@@ -11,6 +11,19 @@
           </span>
         </div>
 
+        {% if job.is_nearby or job.in_priority %}
+          <div class="mb-2 d-flex flex-wrap gap-1">
+            <span class="badge bg-warning text-dark fw-bold">
+              <i class="bi bi-lightning-charge-fill me-1"></i>Nearby Priority Match (Within {{ job.radius_km }} km)
+            </span>
+            {% if job.is_in_priority_window %}
+              <span class="badge bg-danger-subtle text-danger fw-semibold">
+                <i class="bi bi-stopwatch me-1"></i>Priority Window Active ({{ job.priority_window_minutes }}m)
+              </span>
+            {% endif %}
+          </div>
+        {% endif %}
+
         <h5 class="fw-bold mb-1" style="color: var(--text-main);">{{ job.title }}</h5>
         
         <p class="text-muted small mb-3" style="line-height: 1.45;">
@@ -31,14 +44,25 @@
         </div>
 
         <!-- Locality & Distance -->
-        <div class="d-flex align-items-center gap-3 text-muted small mb-3">
+        <div class="d-flex align-items-center flex-wrap gap-3 text-muted small mb-3">
           <div>
             <i class="bi bi-geo-alt-fill text-danger me-1"></i>
             <span class="fw-semibold">{{ job.location }}</span>
           </div>
           <div>
             <i class="bi bi-pin-map text-primary me-1"></i>
-            <span>~{{ job.estimated_distance_km }} km away</span>
+            <span>~{{ job.calculated_distance|default:job.estimated_distance_km }} km away</span>
+          </div>
+          <div>
+            {% if job.is_nearby %}
+              <span class="badge bg-success-subtle text-success small py-0 px-2 rounded-pill">
+                <i class="bi bi-check2-circle me-1"></i>Within Target Radius ({{ job.radius_km }} km)
+              </span>
+            {% else %}
+              <span class="badge bg-secondary-subtle text-secondary small py-0 px-2 rounded-pill">
+                <i class="bi bi-globe me-1"></i>Open to All Platform Workers
+              </span>
+            {% endif %}
           </div>
         </div>
       </div>

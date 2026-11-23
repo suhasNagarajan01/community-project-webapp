@@ -32,6 +32,7 @@ def worker_dashboard(request):
     category = request.GET.get('category', '').strip()
     locality = request.GET.get('locality', '').strip()
     min_wage = request.GET.get('min_wage', '').strip()
+    radius_filter = request.GET.get('radius', '').strip()
     sort_by = request.GET.get('sort', 'newest')
 
     jobs_qs = Job.objects.filter(status='OPEN')
@@ -58,10 +59,28 @@ def worker_dashboard(request):
 
     if sort_by == 'wage_high':
         jobs_qs = jobs_qs.order_by('-pay_offered')
-    elif sort_by == 'distance':
-        jobs_qs = jobs_qs.order_by('estimated_distance_km')
     else:
         jobs_qs = jobs_qs.order_by('-created_at')
+
+    # Calculate distance and nearby flags for each job for the logged in worker
+    worker_user = request.user
+    job_list = []
+    for job in jobs_qs:
+        dist = job.distance_from_worker(worker_user)
+        job.calculated_distance = dist
+        job.is_nearby = (dist <= job.radius_km)
+        job.in_priority = (job.is_in_priority_window and job.is_nearby)
+
+        if radius_filter:
+            try:
+                if dist > float(radius_filter):
+                    continue
+            except ValueError:
+                pass
+        job_list.append(job)
+
+    if sort_by == 'distance':
+        job_list.sort(key=lambda j: j.calculated_distance)
 
     # Get user's applied job IDs to display applied state
     applied_job_ids = set(
@@ -69,13 +88,14 @@ def worker_dashboard(request):
     )
 
     context = {
-        'jobs': jobs_qs,
+        'jobs': job_list,
         'applied_job_ids': applied_job_ids,
         'query': query,
         'active_category': category,
         'active_locality': locality,
+        'active_radius': radius_filter,
         'categories': Job.CATEGORY_CHOICES,
-        'total_jobs_count': jobs_qs.count(),
+        'total_jobs_count': len(job_list),
     }
 
     if request.headers.get('HX-Request'):

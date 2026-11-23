@@ -23,9 +23,14 @@
             </div>
 
             <div>
-              <h6 class="fw-bold mb-0" style="color: var(--text-main);">
-                {{ other_user.get_full_name|default:other_user.username }}
-              </h6>
+              <div class="d-flex align-items-center gap-2">
+                <h6 class="fw-bold mb-0" style="color: var(--text-main);">
+                  {{ other_user.get_full_name|default:other_user.username }}
+                </h6>
+                <span class="badge bg-warning text-dark font-monospace" style="font-size: 0.65rem;">
+                  ADDING SOON
+                </span>
+              </div>
               <small class="text-muted" style="font-size: 0.75rem;">
                 {{ other_user.get_role_display }} • {{ other_user.locality|default:other_user.city }}
               </small>
@@ -38,10 +43,21 @@
                 <i class="bi bi-briefcase me-1"></i> Job Details
               </a>
             {% endif %}
-            <a href="tel:{{ other_user.phone_number }}" class="btn btn-sm btn-brand-outline" title="Call User">
-              <i class="bi bi-telephone-fill"></i>
+            <a href="tel:{{ other_user.phone_number }}" class="btn btn-sm btn-brand px-3" title="Call User Directly">
+              <i class="bi bi-telephone-fill me-1"></i> Call
             </a>
           </div>
+        </div>
+
+        <!-- Adding Soon In-Development Notification Ribbon -->
+        <div class="py-2 px-3 border-bottom border-subtle small d-flex align-items-center justify-content-between" style="background: var(--brand-primary-light); color: var(--brand-primary); font-size: 0.8rem;">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-info-circle-fill"></i>
+            <span><strong>Chat Preview:</strong> Voice notes and instant AI wage negotiation are <strong>adding soon</strong> in Phase 2. Use direct phone call for urgent site arrivals.</span>
+          </div>
+          <a href="tel:{{ other_user.phone_number }}" class="fw-bold text-decoration-none text-nowrap ms-2" style="color: var(--brand-primary);">
+            <i class="bi bi-telephone"></i> Call {{ other_user.phone_number|default:"Now" }}
+          </a>
         </div>
 
         <!-- Chat Messages Area with HTMX live polling every 5s -->

@@ -189,3 +189,49 @@ class DailyWagePlatformTestCase(TestCase):
         data = response.json()
         self.assertEqual(data['theme'], 'brown')
         self.assertEqual(data['mode'], 'dark')
+
+    def test_location_analysis_api(self):
+        """Verifies location analysis API computes nearby workers and match timings."""
+        response = self.client.get(reverse('analyze_location_api'), {
+            'location': 'Indiranagar 100ft Road',
+            'radius_km': '5'
+        })
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['status'], 'success')
+        self.assertIn('nearby_count', data)
+        self.assertIn('match_timing_minutes', data)
+        self.assertEqual(data['radius_km'], 5.0)
+
+    def test_job_posting_with_radius_and_priority_alert(self):
+        """Contractor posts job with 5km radius; nearby workers receive priority alert."""
+        self.client.login(username='buildwell_infra', password='contractor123')
+        response = self.client.post(reverse('post_job'), {
+            'title': 'Urgent Electrical Wiring',
+            'category': 'ELECTRICAL',
+            'description': 'Need certified electrician for office renovation.',
+            'required_skill': 'Electrician',
+            'city': 'Bengaluru',
+            'location': 'Indiranagar',
+            'radius_km': '5',
+            'priority_window_minutes': '30',
+            'pay_offered': '950.00',
+            'pay_type': 'DAILY',
+            'duration': '1 Day',
+            'workers_required': '1',
+            'contact_phone': '9845012345',
+            'start_date': '2026-12-01'
+        }, follow=True)
+        self.assertEqual(response.status_code, 200)
+        
+        # Check job was created with radius and window
+        new_job = Job.objects.get(title='Urgent Electrical Wiring')
+        self.assertEqual(new_job.radius_km, 5)
+        self.assertEqual(new_job.priority_window_minutes, 30)
+
+        # Worker in Indiranagar should have received priority alert
+        priority_notifs = Notification.objects.filter(
+            recipient=self.worker_user,
+            title__icontains="Priority Job Alert"
+        )
+        self.assertGreaterEqual(priority_notifs.count(), 1)

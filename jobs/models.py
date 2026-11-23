@@ -38,6 +38,8 @@ class Job(models.Model):
     city = models.CharField(max_length=100, default='Bengaluru')
     location = models.CharField(max_length=255, help_text="e.g. Indiranagar 12th Main, Near Metro Station")
     estimated_distance_km = models.DecimalField(max_digits=4, decimal_places=1, default=2.5, help_text="Estimated distance for worker view")
+    radius_km = models.PositiveIntegerField(default=5, help_text="Priority radius in km set by user/contractor")
+    priority_window_minutes = models.PositiveIntegerField(default=30, help_text="Match timing window: nearby workers informed first")
     
     pay_offered = models.DecimalField(max_digits=8, decimal_places=2, help_text="Wage offered (e.g. 850.00)")
     pay_type = models.CharField(max_length=20, choices=PAY_TYPE_CHOICES, default='DAILY')
@@ -60,6 +62,21 @@ class Job(models.Model):
     @property
     def is_filled(self):
         return self.workers_hired >= self.workers_required
+
+    @property
+    def is_in_priority_window(self):
+        from datetime import timedelta
+        if not self.created_at:
+            return False
+        return timezone.now() < (self.created_at + timedelta(minutes=self.priority_window_minutes))
+
+    def distance_from_worker(self, worker_user):
+        from .utils import calculate_distance_between
+        worker_loc = getattr(worker_user, 'locality', '') or getattr(worker_user, 'city', '')
+        return calculate_distance_between(self.location, worker_loc)
+
+    def is_worker_nearby(self, worker_user):
+        return self.distance_from_worker(worker_user) <= self.radius_km
 
     def __str__(self):
         return f"{self.title} - ₹{self.pay_offered} ({self.location})"
