@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Sum
+from django.db import transaction
 from django.contrib import messages
+from decimal import Decimal, InvalidOperation
 from accounts.models import User, WorkerProfile, ContractorProfile
 from jobs.models import Job, JobApplication, WalletTransaction
 
@@ -147,43 +149,57 @@ def worker_wallet_view(request):
     - Total earnings
     - Pending payments
     - Previous jobs
-    - Payment & withdrawal history
+    - Payment & withdrawal history with race-condition & validation safety
     """
     if not request.user.is_worker:
         messages.warning(request, "The wallet section is intended for daily wage workers.")
         return redirect('contractor_dashboard')
 
-    transactions = WalletTransaction.objects.filter(worker=request.user).order_by('-created_at')
-    
-    total_earned = transactions.filter(transaction_type='EARNING', status='COMPLETED').aggregate(Sum('amount'))['amount__sum'] or 0.00
-    pending_amount = transactions.filter(status='PENDING').aggregate(Sum('amount'))['amount__sum'] or 0.00
-    total_withdrawn = transactions.filter(transaction_type='WITHDRAWAL', status='COMPLETED').aggregate(Sum('amount'))['amount__sum'] or 0.00
-    available_balance = float(total_earned) - float(total_withdrawn)
-
     if request.method == 'POST':
-        amount = request.POST.get('withdraw_amount')
+        amount_raw = request.POST.get('withdraw_amount', '').strip()
         try:
-            amount = float(amount)
-            if 0 < amount <= available_balance:
-                WalletTransaction.objects.create(
-                    worker=request.user,
-                    amount=amount,
-                    transaction_type='WITHDRAWAL',
-                    status='COMPLETED',
-                    description=f"Direct UPI payout to {request.user.phone_number or 'registered account'}"
-                )
-                messages.success(request, f"Payout of ₹{amount:.2f} initiated successfully to your UPI!")
-                return redirect('worker_wallet')
+            amount = Decimal(amount_raw).quantize(Decimal('0.01'))
+            if amount <= Decimal('0.00'):
+                messages.error(request, "Withdrawal amount must be greater than zero.")
+            elif amount < Decimal('100.00'):
+                messages.error(request, "Minimum withdrawal amount is ₹100.")
             else:
-                messages.error(request, "Invalid withdrawal amount or exceeds available balance.")
-        except ValueError:
+                with transaction.atomic():
+                    # Recalculate live verified balances atomically
+                    earnings = WalletTransaction.objects.filter(
+                        worker=request.user, transaction_type='EARNING', status='COMPLETED'
+                    ).aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
+                    withdrawn = WalletTransaction.objects.filter(
+                        worker=request.user, transaction_type='WITHDRAWAL', status='COMPLETED'
+                    ).aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
+                    live_balance = earnings - withdrawn
+
+                    if amount <= live_balance:
+                        WalletTransaction.objects.create(
+                            worker=request.user,
+                            amount=amount,
+                            transaction_type='WITHDRAWAL',
+                            status='COMPLETED',
+                            description=f"Direct UPI payout to {request.user.phone_number or 'registered account'}"
+                        )
+                        messages.success(request, f"Payout of ₹{amount:.2f} initiated successfully to your UPI!")
+                        return redirect('worker_wallet')
+                    else:
+                        messages.error(request, f"Insufficient funds. Maximum withdrawable balance is ₹{live_balance:.2f}.")
+        except (InvalidOperation, ValueError, TypeError):
             messages.error(request, "Please enter a valid numeric amount.")
+
+    transactions = WalletTransaction.objects.filter(worker=request.user).order_by('-created_at')
+    total_earned = transactions.filter(transaction_type='EARNING', status='COMPLETED').aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
+    pending_amount = transactions.filter(status='PENDING').aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
+    total_withdrawn = transactions.filter(transaction_type='WITHDRAWAL', status='COMPLETED').aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
+    available_balance = max(Decimal('0.00'), total_earned - total_withdrawn)
 
     return render(request, 'dashboard/wallet.html', {
         'transactions': transactions,
         'total_earned': total_earned,
         'pending_amount': pending_amount,
-        'available_balance': max(0.0, available_balance),
+        'available_balance': available_balance,
     })
 
 

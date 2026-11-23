@@ -149,52 +149,8 @@
     </div>
   </div>
 
-  <!-- Featured Open Daily Wage Jobs -->
-  <div class="mb-5">
-    <div class="d-flex align-items-center justify-content-between mb-4">
-      <div>
-        <h3 class="fw-bold mb-1" style="color: var(--text-main);">Recently Posted Daily Jobs</h3>
-        <p class="text-muted mb-0 small">Live openings in Bengaluru and surrounding localities</p>
-      </div>
-      <a href="{% url 'login' %}?role=WORKER" class="btn btn-sm btn-brand-outline">
-        View All Jobs <i class="bi bi-arrow-right"></i>
-      </a>
-    </div>
-
-    <div class="row g-3">
-      {% for job in recent_jobs %}
-        <div class="col-md-6 col-lg-4">
-          <div class="app-card p-3 h-100 d-flex flex-column justify-content-between">
-            <div>
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="badge-chip badge-chip-brand">{{ job.get_category_display }}</span>
-                <span class="wage-pill">₹{{ job.pay_offered|floatformat:0 }}/day</span>
-              </div>
-              <h5 class="fw-bold mb-1" style="color: var(--text-main);">{{ job.title }}</h5>
-              <p class="text-muted small mb-2 text-truncate-2">{{ job.description }}</p>
-              
-              <div class="small text-muted mb-2">
-                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ job.location }} ({{ job.estimated_distance_km }} km)</div>
-                <div><i class="bi bi-clock me-1"></i>{{ job.duration }}</div>
-              </div>
-            </div>
-
-            <div class="pt-3 border-top border-subtle d-flex align-items-center justify-content-between mt-2">
-              <div class="small text-muted">
-                <span class="star-rating"><i class="bi bi-star-fill"></i> {{ job.contractor.contractor_profile.rating|default:"4.9" }}</span>
-                <span>({{ job.workers_required }} needed)</span>
-              </div>
-              <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-brand">View Details</a>
-            </div>
-          </div>
-        </div>
-      {% empty %}
-        <div class="col-12 text-center py-4 text-muted">
-          <p>No open jobs posted yet. Log in as a contractor to post one!</p>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
+  <!-- Scrolling Animated Testimonials Section -->
+  {% include 'partials/testimonials_marquee.html' %}
 
 </div>
 {% endblock %}

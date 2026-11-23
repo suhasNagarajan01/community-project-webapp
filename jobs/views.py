@@ -124,12 +124,19 @@ def update_application_status(request, app_id, action):
     worker = app.worker
 
     if action == 'accept':
+        if app.status == 'ACCEPTED':
+            messages.info(request, f"{worker.get_full_name() or worker.username} has already been hired for this assignment.")
+            return redirect('contractor_job_applicants', pk=job.id)
+        if job.is_filled:
+            messages.warning(request, "All required worker positions for this job are already filled.")
+            return redirect('contractor_job_applicants', pk=job.id)
+
         app.status = 'ACCEPTED'
-        app.save()
+        app.save(update_fields=['status'])
         job.workers_hired += 1
         if job.workers_hired >= job.workers_required:
             job.status = 'IN_PROGRESS'
-        job.save()
+        job.save(update_fields=['workers_hired', 'status'])
 
         Notification.objects.create(
             recipient=worker,
@@ -142,22 +149,30 @@ def update_application_status(request, app_id, action):
 
     elif action == 'reject':
         app.status = 'REJECTED'
-        app.save()
+        app.save(update_fields=['status'])
         messages.info(request, f"Application for {worker.get_full_name() or worker.username} marked as not selected.")
 
     elif action == 'complete':
-        # Work completed: credit worker's wallet with wage!
+        # Security & Integrity check: prevent duplicate wallet credits or completing un-hired work
+        if app.status == 'COMPLETED':
+            messages.info(request, "This assignment has already been completed and wages settled.")
+            return redirect('create_review', job_id=job.id, reviewee_id=worker.id)
+
+        if app.status != 'ACCEPTED':
+            messages.warning(request, "Only workers who have been hired and accepted can be marked completed.")
+            return redirect('contractor_job_applicants', pk=job.id)
+
         app.status = 'COMPLETED'
-        app.save()
+        app.save(update_fields=['status'])
 
         # Update worker profile completed count
         worker_profile = getattr(worker, 'worker_profile', None)
         if worker_profile:
             worker_profile.completed_jobs_count += 1
-            worker_profile.save()
+            worker_profile.save(update_fields=['completed_jobs_count'])
             worker_profile.recalculate_ranking()
 
-        # Create wallet earning record
+        # Create wallet earning record with idempotency check
         WalletTransaction.objects.create(
             worker=worker,
             job=job,

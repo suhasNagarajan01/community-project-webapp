@@ -4,8 +4,8 @@
 {% block title %}Login - RojgarSetu Daily Wage Platform{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
+<div class="container py-4 py-md-5">
+  <div class="row justify-content-center mb-4">
     <div class="col-md-8 col-lg-5">
       <div class="glass-panel p-4 p-md-5">
 
@@ -14,18 +14,32 @@
             <i class="bi bi-person-lock fs-2"></i>
           </div>
           <h3 class="fw-bold mb-1" style="color: var(--text-main);">Welcome Back</h3>
-          <p class="text-muted small">Select your role to access your dedicated workspace</p>
+          <p class="text-muted small mb-0">Select your role to access your dedicated workspace</p>
         </div>
 
-        <!-- Role Toggle Pills -->
-        <ul class="nav nav-pills nav-fill mb-4 p-1 rounded-pill" style="background-color: var(--border-subtle);" role="tablist">
+        <!-- Role Toggle Pills (Clicking instantly holds demo preset) -->
+        <ul class="nav nav-pills nav-fill mb-3 p-1 rounded-pill" style="background-color: var(--border-subtle);" role="tablist">
           <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab == 'WORKER' %}active{% endif %}" id="worker-tab" data-bs-toggle="pill" data-bs-target="#worker-pane" type="button" role="tab" style="{% if role_tab == 'WORKER' %}background: var(--brand-gradient); color: #fff;{% endif %}">
+            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab != 'CONTRACTOR' %}active{% endif %}" 
+                    id="worker-tab" 
+                    data-bs-toggle="pill" 
+                    data-bs-target="#worker-pane" 
+                    type="button" 
+                    role="tab"
+                    onclick="loadWorkerPreset()"
+                    style="{% if role_tab != 'CONTRACTOR' %}background: var(--brand-gradient); color: #fff;{% endif %}">
               <i class="bi bi-person-badge me-1"></i> Worker Login
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab == 'CONTRACTOR' %}active{% endif %}" id="contractor-tab" data-bs-toggle="pill" data-bs-target="#contractor-pane" type="button" role="tab" style="{% if role_tab == 'CONTRACTOR' %}background: var(--brand-gradient); color: #fff;{% endif %}">
+            <button class="nav-link rounded-pill py-2 fw-semibold {% if role_tab == 'CONTRACTOR' %}active{% endif %}" 
+                    id="contractor-tab" 
+                    data-bs-toggle="pill" 
+                    data-bs-target="#contractor-pane" 
+                    type="button" 
+                    role="tab"
+                    onclick="loadContractorPreset()"
+                    style="{% if role_tab == 'CONTRACTOR' %}background: var(--brand-gradient); color: #fff;{% endif %}">
               <i class="bi bi-building me-1"></i> Contractor Login
             </button>
           </li>
@@ -33,16 +47,25 @@
 
         <div class="tab-content">
           <!-- Worker Login Tab -->
-          <div class="tab-pane fade {% if role_tab == 'WORKER' %}show active{% endif %}" id="worker-pane" role="tabpanel">
+          <div class="tab-pane fade {% if role_tab != 'CONTRACTOR' %}show active{% endif %}" id="worker-pane" role="tabpanel">
+            <div class="d-flex align-items-center justify-content-between p-2 px-3 mb-3 rounded-3" style="background: var(--brand-primary-light); border: 1px solid var(--border-subtle);">
+              <div class="small fw-semibold" style="color: var(--brand-primary);">
+                <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Demo Preset: <strong>Ramesh Kumar (Electrician)</strong>
+              </div>
+              <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold" style="color: var(--brand-primary); font-size: 0.75rem;" onclick="loadWorkerPreset()">
+                Reload Preset
+              </button>
+            </div>
+
             <form method="POST" action="{% url 'login' %}">
               {% csrf_token %}
               <input type="hidden" name="role_tab" value="WORKER">
 
               <div class="mb-3">
-                <label class="form-label fw-semibold small" style="color: var(--text-main);">Username or Phone</label>
+                <label class="form-label fw-semibold small" style="color: var(--text-main);">Worker Username</label>
                 <div class="input-group">
                   <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-person text-muted"></i></span>
-                  <input type="text" name="username" class="form-control border-start-0 border-subtle" placeholder="e.g. ramesh_kumar" required>
+                  <input type="text" name="username" id="worker_username" class="form-control border-start-0 border-subtle" value="ramesh_kumar" placeholder="e.g. ramesh_kumar" required>
                 </div>
               </div>
 
@@ -50,27 +73,27 @@
                 <label class="form-label fw-semibold small" style="color: var(--text-main);">Password</label>
                 <div class="input-group">
                   <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-key text-muted"></i></span>
-                  <input type="password" name="password" class="form-control border-start-0 border-subtle" placeholder="••••••••" required>
+                  <input type="password" name="password" id="worker_password" class="form-control border-start-0 border-subtle" value="worker123" placeholder="••••••••" required>
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold mb-3">
-                Log In as Worker
-              </button>
-            </form>
-
-            <!-- 1-Click Worker Demo Access -->
-            <form method="POST" action="{% url 'login' %}" class="mt-3">
-              {% csrf_token %}
-              <input type="hidden" name="action" value="demo_worker">
-              <button type="submit" class="btn btn-sm btn-outline-success w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-                <i class="bi bi-lightning-charge-fill"></i> Quick Demo Login: Ramesh Kumar (Electrician)
+              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold">
+                Log In as Worker <i class="bi bi-arrow-right ms-1"></i>
               </button>
             </form>
           </div>
 
           <!-- Contractor Login Tab -->
           <div class="tab-pane fade {% if role_tab == 'CONTRACTOR' %}show active{% endif %}" id="contractor-pane" role="tabpanel">
+            <div class="d-flex align-items-center justify-content-between p-2 px-3 mb-3 rounded-3" style="background: #e0f2fe; border: 1px solid var(--border-subtle);">
+              <div class="small fw-semibold text-primary">
+                <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Demo Preset: <strong>Rajesh Sharma (BuildWell)</strong>
+              </div>
+              <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold text-primary" style="font-size: 0.75rem;" onclick="loadContractorPreset()">
+                Reload Preset
+              </button>
+            </div>
+
             <form method="POST" action="{% url 'login' %}">
               {% csrf_token %}
               <input type="hidden" name="role_tab" value="CONTRACTOR">
@@ -79,7 +102,7 @@
                 <label class="form-label fw-semibold small" style="color: var(--text-main);">Company / Contractor Username</label>
                 <div class="input-group">
                   <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-building text-muted"></i></span>
-                  <input type="text" name="username" class="form-control border-start-0 border-subtle" placeholder="e.g. buildwell_infra" required>
+                  <input type="text" name="username" id="contractor_username" class="form-control border-start-0 border-subtle" value="buildwell_infra" placeholder="e.g. buildwell_infra" required>
                 </div>
               </div>
 
@@ -87,35 +110,79 @@
                 <label class="form-label fw-semibold small" style="color: var(--text-main);">Password</label>
                 <div class="input-group">
                   <span class="input-group-text bg-transparent border-end-0 border-subtle"><i class="bi bi-key text-muted"></i></span>
-                  <input type="password" name="password" class="form-control border-start-0 border-subtle" placeholder="••••••••" required>
+                  <input type="password" name="password" id="contractor_password" class="form-control border-start-0 border-subtle" value="contractor123" placeholder="••••••••" required>
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold mb-3">
-                Log In as Contractor
-              </button>
-            </form>
-
-            <!-- 1-Click Contractor Demo Access -->
-            <form method="POST" action="{% url 'login' %}" class="mt-3">
-              {% csrf_token %}
-              <input type="hidden" name="action" value="demo_contractor">
-              <button type="submit" class="btn btn-sm btn-outline-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-                <i class="bi bi-lightning-charge-fill"></i> Quick Demo Login: Rajesh Sharma (Contractor)
+              <button type="submit" class="btn btn-brand w-100 py-2 fw-semibold">
+                Log In as Contractor <i class="bi bi-arrow-right ms-1"></i>
               </button>
             </form>
           </div>
         </div>
 
-        <div class="text-center pt-4 border-top border-subtle mt-4">
+        <div class="text-center pt-3 border-top border-subtle mt-4">
           <p class="text-muted small mb-0">
             Don't have an account yet? 
-            <a href="{% url 'register' %}" class="fw-bold" style="color: var(--brand-primary);">Register Now</a>
+            <a href="{% url 'register' %}" class="fw-bold text-decoration-none" style="color: var(--brand-primary);">Register Now</a>
           </p>
         </div>
 
       </div>
     </div>
   </div>
+
+  <!-- Scrolling Animated Testimonials Section on Login Page -->
+  {% include 'partials/testimonials_marquee.html' %}
+
 </div>
+
+<script>
+  function loadWorkerPreset() {
+    const u = document.getElementById('worker_username');
+    const p = document.getElementById('worker_password');
+    if (u) u.value = 'ramesh_kumar';
+    if (p) p.value = 'worker123';
+
+    const wTab = document.getElementById('worker-tab');
+    const cTab = document.getElementById('contractor-tab');
+    if (wTab) {
+      wTab.style.background = 'var(--brand-gradient)';
+      wTab.style.color = '#fff';
+    }
+    if (cTab) {
+      cTab.style.background = 'transparent';
+      cTab.style.color = 'var(--text-main)';
+    }
+  }
+
+  function loadContractorPreset() {
+    const u = document.getElementById('contractor_username');
+    const p = document.getElementById('contractor_password');
+    if (u) u.value = 'buildwell_infra';
+    if (p) p.value = 'contractor123';
+
+    const wTab = document.getElementById('worker-tab');
+    const cTab = document.getElementById('contractor-tab');
+    if (cTab) {
+      cTab.style.background = 'var(--brand-gradient)';
+      cTab.style.color = '#fff';
+    }
+    if (wTab) {
+      wTab.style.background = 'transparent';
+      wTab.style.color = 'var(--text-main)';
+    }
+  }
+
+  // Check URL query parameter ?role=contractor
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('role') === 'CONTRACTOR' || urlParams.get('role') === 'contractor') {
+      const cTab = document.getElementById('contractor-tab');
+      if (cTab) {
+        cTab.click();
+      }
+    }
+  });
+</script>
 {% endblock %}

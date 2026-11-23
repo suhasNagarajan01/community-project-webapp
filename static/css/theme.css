@@ -551,3 +551,63 @@ body {
 .rating-group label:hover ~ label {
   color: #f59e0b;
 }
+
+/* ==========================================================================
+   SCROLLING ANIMATED TESTIMONIALS SECTION
+   ========================================================================== */
+.testimonials-marquee-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 20px 0;
+  mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+}
+
+.testimonials-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: marquee-scroll 38s linear infinite;
+}
+
+.testimonials-marquee-wrapper:hover .testimonials-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonials-track {
+    animation: none;
+    overflow-x: auto;
+  }
+}
+
+.testimonial-card {
+  width: 350px;
+  min-width: 350px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--brand-secondary);
+}
+

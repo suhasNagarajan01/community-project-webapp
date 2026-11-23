@@ -19,6 +19,7 @@ def mark_notification_read(request, pk):
     notif = get_object_or_404(Notification, pk=pk, recipient=request.user)
     notif.is_read = True
     notif.save(update_fields=['is_read'])
-    if notif.link:
+    # Security check: prevent open redirects by verifying internal relative URL
+    if notif.link and notif.link.startswith('/') and not notif.link.startswith('//'):
         return redirect(notif.link)
     return redirect('notification_list')
